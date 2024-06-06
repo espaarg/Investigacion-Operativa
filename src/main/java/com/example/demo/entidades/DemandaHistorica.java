@@ -18,7 +18,7 @@ import java.util.Date;
 @Setter
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Data
+
 @Table(name = "DemandaHistorica")
 public class DemandaHistorica extends Base{
 
