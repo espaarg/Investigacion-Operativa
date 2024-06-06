@@ -1,6 +1,8 @@
 package com.example.demo;
 
 import com.example.demo.entidades.Articulo;
+import com.example.demo.repositorios.ArticuloRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,33 +17,13 @@ import java.util.Date;
 @SpringBootApplication
 public class InvOpApplication {
 
-	public static Connection ConectarBD(){
-
-		Connection conexion;
-		String host = "jdbc:mysql://localhost/";
-		String user = "root";
-		String pass = "";
-		String bd = "prueba";
-
-		System.out.println("Conectando...");
-
-		try {
-			conexion = DriverManager.getConnection(host+bd,user,pass);
-			System.out.println("Conexion exitosa");
-		} catch (SQLException e){
-			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
-		}
-
-		return conexion;
-
-	}
+	@Autowired
+	private ArticuloRepository articuloRepository;
 
 	public static void main(String[] args) {
 
 		SpringApplication.run(InvOpApplication.class, args);
 		System.out.println("Hola, estoy andando bien");
-		Connection bd = ConectarBD();
 	}
 
 	@Bean
@@ -67,6 +49,7 @@ public class InvOpApplication {
 					.fechaModificacion(fechaActual)
 					.build();
 
+			articuloRepository.save(articulo1);
 
 			System.out.println(articulo1.getNombre());
 		};

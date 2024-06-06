@@ -1,8 +1,10 @@
 package com.example.demo.servicios;
 
 import com.example.demo.entidades.Articulo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 
 public interface ArticuloService extends BaseService<Articulo, Long> {
 
