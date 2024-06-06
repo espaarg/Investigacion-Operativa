@@ -2,16 +2,17 @@ package com.example.demo.entidades;
 
 import com.example.demo.enums.CantidadPeriodo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
+@Table(name="demandaHistorica")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -19,29 +20,30 @@ import java.util.Date;
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 
-@Table(name = "DemandaHistorica")
 public class DemandaHistorica extends Base{
 
     private String nombre;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private CantidadPeriodo periodo;
 
     @NotNull
     private int cantidadVendida;
 
     @NotNull
-    private int montoTotal;
-
-    @NotNull
+    @Temporal(TemporalType.DATE)
     private Date fechaInicio;
 
     @NotNull
+    @Temporal(TemporalType.DATE)
     private Date fechaFin;
 
     @NotNull
+    @Temporal(TemporalType.DATE)
     private Date fechaAlta;
 
+    @Temporal(TemporalType.DATE)
     private Date fechaBaja;
 
     @NotNull
@@ -49,7 +51,15 @@ public class DemandaHistorica extends Base{
     private Venta venta;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Articulo articulo;
+    @OneToMany(fetch= FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @JoinColumn(name="demandaHistorica_id")
+    private List<DHistoricaVenta> dHistoricaVentaList = new ArrayList<>();
+
+
+    public void AgregarDHistoricaVenta (DHistoricaVenta dHistoricaVenta){
+        dHistoricaVentaList.add(dHistoricaVenta);
+    }
+
 
 }

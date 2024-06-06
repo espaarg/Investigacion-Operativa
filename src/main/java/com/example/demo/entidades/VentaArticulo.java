@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 import java.util.Date;
 
 @Entity
+@Table(name="ventaArticulo")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -15,7 +16,6 @@ import java.util.Date;
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 
-@Table(name = "VentaArticulo")
 public class VentaArticulo extends Base{
     @NotNull
     private float subTotal;
@@ -24,9 +24,10 @@ public class VentaArticulo extends Base{
     private int cantidadArticulo;
 
     @NotNull
+    @Temporal(TemporalType.DATE)
     private Date fechaAlta;
 
-    @NotNull
+    @Temporal(TemporalType.DATE)
     private Date fechaBaja;
 
     @NotNull

@@ -41,11 +41,11 @@ public class InvOpApplication {
 			System.out.println("Fecha formateada: " + fechaFormateada);
 
 			Articulo articulo1 = Articulo.builder()
-					.nombre("Cocaína")
+					.nombre("Coca Cola")
 					.fechaAlta(fechaActual)
 					.precioCompra(100)
 					.stockActual(2)
-					.stockMinimo(45)
+					.stockDeSeguridad(45)
 					.fechaModificacion(fechaActual)
 					.build();
 

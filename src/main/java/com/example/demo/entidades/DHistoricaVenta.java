@@ -1,11 +1,15 @@
 package com.example.demo.entidades;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
-import java.util.Date;
 
+import java.util.Date;
+@Table(name="DHistoricaVenta")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,25 +18,15 @@ import java.util.Date;
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 
-public class DHistoricaDPrediccion extends Base{
-
-    @NotNull
-    private String nombre;
-
-    @NotNull
-    private Date fechaAlta;
-
-    @NotNull
-    private Date fechaBaja;
+public class DHistoricaVenta extends Base{
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    private DemandaHistorica dHistorica;
+    private Venta venta;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    private PrediccionDemanda dPrediccion;
-
+    private DemandaHistorica demandaHistorica;
 
 
 }

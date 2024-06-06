@@ -1,9 +1,7 @@
 package com.example.demo.entidades;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -11,6 +9,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 import java.util.Date;
 
 @Entity
+@Table(name="pedidoArticulo")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -18,7 +17,6 @@ import java.util.Date;
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 
-@Table(name = "PedidoArticulo")
 public class PedidoArticulo extends Base{
 
     @NotNull
@@ -33,9 +31,10 @@ public class PedidoArticulo extends Base{
     private OrdenDeCompra ordenDeCompra;
 
     @NotNull
+    @Temporal(TemporalType.DATE)
     private Date fechaAlta;
 
-    @NotNull
+    @Temporal(TemporalType.DATE)
     private Date fechaBaja;
 
 

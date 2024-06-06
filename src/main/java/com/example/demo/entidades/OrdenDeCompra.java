@@ -14,13 +14,14 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name = "ordenDeCompra")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name = "OrdenDeCompra")
+
 public class OrdenDeCompra extends Base{
 
     private String descripcion;
@@ -32,11 +33,14 @@ public class OrdenDeCompra extends Base{
     private int TotalArticulos;
 
     @NotNull
+    @Temporal(TemporalType.DATE)
     private Date fechaPedido;
 
     @NotNull
+    @Temporal(TemporalType.DATE)
     private Date fechaBaja;
 
+    @Temporal(TemporalType.DATE) //hace falta?
     private Date fechaLlegada;
 
     @Enumerated(EnumType.STRING)
@@ -48,11 +52,12 @@ public class OrdenDeCompra extends Base{
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @NotNull
     @Builder.Default
+    @JoinColumn(name = "ordenDeCompra_id")
     private List<PedidoArticulo> pedidoArticulos = new ArrayList<>();
 
-    public void pedidoArticulos(PedidoArticulo dam){
+    public void pedidoArticulos(PedidoArticulo pedidoArticulo){
 
-        pedidoArticulos.add(dam);
+        pedidoArticulos.add(pedidoArticulo);
     }
 
 }

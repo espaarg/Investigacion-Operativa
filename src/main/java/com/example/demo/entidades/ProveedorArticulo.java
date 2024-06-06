@@ -1,11 +1,13 @@
 package com.example.demo.entidades;
 
+import com.example.demo.enums.Proveedor;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
-import java.util.Date;
 
+import java.util.Date;
+@Table(name="articulos")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,25 +16,16 @@ import java.util.Date;
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 
-public class DHistoricaDPrediccion extends Base{
+public class ProveedorArticulo extends Base{
 
     @NotNull
-    private String nombre;
-
-    @NotNull
-    private Date fechaAlta;
-
-    @NotNull
-    private Date fechaBaja;
+    private int puntoPedido;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    private DemandaHistorica dHistorica;
+    private Articulo articulo;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    private PrediccionDemanda dPrediccion;
-
-
+    @Enumerated(EnumType.STRING)
+    private Proveedor proveedor;
 
 }
