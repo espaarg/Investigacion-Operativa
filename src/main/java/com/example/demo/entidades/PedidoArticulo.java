@@ -16,7 +16,6 @@ import java.util.Date;
 @Setter
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name="pedidoArticulo")
 public class PedidoArticulo extends Base{
 
     @NotNull

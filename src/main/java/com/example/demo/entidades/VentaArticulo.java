@@ -14,7 +14,6 @@ import java.util.Date;
 @Setter
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name="ventaArticulo")
 public class VentaArticulo extends Base{
     @NotNull
     private float subTotal;
