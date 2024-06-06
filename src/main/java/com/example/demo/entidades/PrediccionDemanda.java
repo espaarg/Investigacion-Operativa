@@ -11,14 +11,13 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name="prediccionDemanda")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
+@Table(name="prediccionDemanda")
 public class PrediccionDemanda extends Base{
 
     @NotNull

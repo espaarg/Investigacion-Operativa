@@ -7,7 +7,7 @@ import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.Date;
-@Table(name="articulos")
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +15,7 @@ import java.util.Date;
 @Setter
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
+@Table(name="proveedorArticulos")
 public class ProveedorArticulo extends Base{
 
     @NotNull

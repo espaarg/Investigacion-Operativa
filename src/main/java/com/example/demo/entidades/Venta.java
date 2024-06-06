@@ -11,13 +11,12 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name="venta")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
+@Table(name="venta")
 public class Venta extends Base{
 
         @NotNull
@@ -36,24 +35,15 @@ public class Venta extends Base{
 
         @NotNull
         @OneToMany(mappedBy = "venta", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-        @Builder.Default
-        @JoinColumn(name="venta_id")
         private List<VentaArticulo> ventaArticulos;
 
-        public void AgregarVentaArticulo (VentaArticulo ventaArticulo){
-                ventaArticulos.add(ventaArticulo);
-        }
+
 
         @NotNull
         @OneToMany(fetch= FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-        @Builder.Default
-        @JoinColumn(name="venta_id")
-        private List<DHistoricaVenta> dHistoricaVentaList = new ArrayList<>();
+        private List<DHistoricaVenta> dHistoricaVentas = new ArrayList<>();
 
 
-        public void AgregarDHistoricaVenta (DHistoricaVenta dHistoricaVenta){
-                dHistoricaVentaList.add(dHistoricaVenta);
-        }
 
 
 

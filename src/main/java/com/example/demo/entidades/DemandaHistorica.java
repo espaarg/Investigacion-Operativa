@@ -12,14 +12,13 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name="demandaHistorica")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
+@Table(name="demandaHistorica")
 public class DemandaHistorica extends Base{
 
     private String nombre;
@@ -53,13 +52,10 @@ public class DemandaHistorica extends Base{
     @NotNull
     @OneToMany(fetch= FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    @JoinColumn(name="demandaHistorica_id")
     private List<DHistoricaVenta> dHistoricaVentaList = new ArrayList<>();
 
 
-    public void AgregarDHistoricaVenta (DHistoricaVenta dHistoricaVenta){
-        dHistoricaVentaList.add(dHistoricaVenta);
-    }
+
 
 
 }

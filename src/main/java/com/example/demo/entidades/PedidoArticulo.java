@@ -9,14 +9,14 @@ import org.antlr.v4.runtime.misc.NotNull;
 import java.util.Date;
 
 @Entity
-@Table(name="pedidoArticulo")
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
+@Table(name="pedidoArticulo")
 public class PedidoArticulo extends Base{
 
     @NotNull
