@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -16,7 +17,8 @@ import java.util.Date;
 @Setter
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
+@Data
+@Table(name = "PedidoArticulo")
 public class PedidoArticulo extends Base{
 
     @NotNull

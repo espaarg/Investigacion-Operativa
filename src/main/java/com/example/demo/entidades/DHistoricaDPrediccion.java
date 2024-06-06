@@ -13,6 +13,8 @@ import java.util.Date;
 @Setter
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Data
+@Table(name = "DHistoricaDPrediccion")
 public class DHistoricaDPrediccion extends Base{
     @NotNull
     private String nombre;

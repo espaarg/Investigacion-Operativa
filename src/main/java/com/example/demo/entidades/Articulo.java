@@ -2,6 +2,7 @@ package com.example.demo.entidades;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -13,7 +14,8 @@ import java.util.Date;
 @Setter
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
+@Data
+@Table(name = "Articulo")
 public class Articulo extends Base {
 
     @NotNull

@@ -16,6 +16,8 @@ import java.util.List;
 @Setter
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Data
+@Table(name = "Venta")
 public class Venta extends Base{
 
         @NotNull
