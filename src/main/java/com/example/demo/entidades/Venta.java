@@ -36,21 +36,21 @@ public class Venta extends Base{
         @OneToMany(mappedBy = "venta", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
         private List<VentaArticulo> ventaArticulos;
 
-        /*
+
          public void AgregarVentaArticulo (VentaArticulo ventaArticulo){
         ventaArticulos.add(ventaArticulo);
         }
-         */
+
 
         @NotNull
         @OneToMany(fetch= FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
         private List<DHistoricaVenta> dHistoricaVentas = new ArrayList<>();
 
-        /*
+
          public void AgregarDHistoricaVenta (DHistoricaVenta dHistoricaVenta){
         dHistoricaVentas.add(dHistoricaVenta);
          }
-         */
+
 
 
 
