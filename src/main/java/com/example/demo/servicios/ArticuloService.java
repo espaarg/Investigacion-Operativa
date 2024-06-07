@@ -1,6 +1,8 @@
 package com.example.demo.servicios;
 
 import com.example.demo.entidades.Articulo;
+import com.example.demo.entidades.PedidoArticulo;
+import org.hibernate.query.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
