@@ -53,8 +53,9 @@ public class DemandaHistorica extends Base{
     @Builder.Default
     private List<DHistoricaVenta> dHistoricaVentaList = new ArrayList<>();
 
-
-
+   /* public void AgregarDHistoricaVenta (DHistoricaVenta dHistoricaVenta){
+        dHistoricaVentaList.add(dHistoricaVenta);
+    }*/
 
 
 }

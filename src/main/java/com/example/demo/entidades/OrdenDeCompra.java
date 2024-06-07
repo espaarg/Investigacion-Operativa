@@ -52,6 +52,10 @@ public class OrdenDeCompra extends Base{
     @Builder.Default
     private List<PedidoArticulo> pedidoArticulos = new ArrayList<>();
 
-
+    /*
+     public void AgregarPedidoArticulo (PedidoArticulo pedidoArticulo){
+        pedidoArticulos.add(pedidoArticulo);
+    }
+     */
 
 }
