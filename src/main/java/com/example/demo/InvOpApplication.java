@@ -46,7 +46,6 @@ public class InvOpApplication {
 					.precioCompra(100)
 					.stockActual(2)
 					.stockDeSeguridad(45)
-					.fechaModificacion(fechaActual)
 					.build();
 
 			articuloRepository.save(articulo1);
