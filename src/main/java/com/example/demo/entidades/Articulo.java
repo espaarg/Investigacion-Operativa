@@ -39,8 +39,5 @@ public class Articulo extends Base {
     @Temporal(TemporalType.DATE)
     private Date fechaAlta;
 
-    @NotNull
-    @Temporal(TemporalType.DATE)
-    private Date fechaModificacion;
 
 }
