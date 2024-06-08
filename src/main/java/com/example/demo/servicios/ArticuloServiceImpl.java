@@ -17,13 +17,24 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
     @Autowired
     private ArticuloRepository articuloRepository;
 
-    public ArticuloServiceImpl(BaseRepository<Articulo, Long> baseRepository, ArticuloRepository articuloInsumoRepository) {
+    public ArticuloServiceImpl(BaseRepository<Articulo, Long> baseRepository, ArticuloRepository articuloRepository) {
         super(baseRepository);
         this.articuloRepository = articuloRepository;
     }
 
+    @Override
+    public List<Articulo> traerTodosArticulos() throws Exception {
+        try {
+            List<Articulo> articulos = articuloRepository.traerTodosArticulos();
+            return articulos;
+        } catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+
 /*    @Override
-    public List<ControlStockDTO> controlStockInsuficiente() throws Exception {
+    public List<BusquedaArticulosDTO> traerTodosArticulos() throws Exception {
         try {
             List<ArticuloInsumo> articuloInsumos = articuloInsumoRepository.controlStockInsuficiente();
             List<ControlStockDTO> stockDTO = new ArrayList<>();
@@ -46,10 +57,10 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
-    }
+    }*/
 
 
-    @Override
+/*    @Override
     public List<ControlStockDTO> controlStockBajo() throws Exception {
         try {
             List<ArticuloInsumo> articuloInsumos = articuloInsumoRepository.controlStockInsuficiente();

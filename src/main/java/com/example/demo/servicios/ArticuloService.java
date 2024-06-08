@@ -10,9 +10,11 @@ import java.util.List;
 
 public interface ArticuloService extends BaseService<Articulo, Long> {
 
+    List<Articulo> traerTodosArticulos() throws Exception;
+
     /*    List<ControlStockDTO> controlStockInsuficiente() throws Exception;
 
-        List<ControlStockDTO> controlStockBajo() throws Exception;*/
+            List<ControlStockDTO> controlStockBajo() throws Exception;*/
     List<Articulo> search(String nombre) throws Exception;
 
 /*

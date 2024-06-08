@@ -10,11 +10,9 @@ import java.util.List;
 public interface ArticuloRepository extends BaseRepository<Articulo, Long>{
 
 
-/*    @Query(value = "SELECT * FROM articulo_insumo", nativeQuery = true)
-    List<Articulo> controlStockInsuficiente();
+   @Query(value = "SELECT * FROM articulo", nativeQuery = true)
+    List<Articulo> traerTodosArticulos();
 
-    @Query(value = "SELECT * FROM articulo_insumo", nativeQuery = true)
-    List<Articulo> controlStockBajo();*/
 
     @Query(value = "SELECT * FROM articulo a WHERE a.nombre LIKE %:nombre% ",
             nativeQuery = true)

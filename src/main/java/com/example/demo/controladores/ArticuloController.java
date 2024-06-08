@@ -14,7 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/Articulo")
 public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloServiceImpl> {
 
-    /*@GetMapping("/search")
+    @GetMapping("/all")
+    public ResponseEntity<?> traerTodosArticulos(){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerTodosArticulos());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }
+
+    /*
     public ResponseEntity<?> search(String denominacion) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(servicio.search(denominacion));
