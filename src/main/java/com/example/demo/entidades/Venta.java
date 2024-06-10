@@ -18,8 +18,6 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Venta extends Base{
 
-        @NotNull
-        private String detalle;
 
         @NotNull
         private int montoTotal;
