@@ -17,41 +17,10 @@ import java.util.Date;
 @SpringBootApplication
 public class InvOpApplication {
 
-	@Autowired
-	private ArticuloRepository articuloRepository;
-
 	public static void main(String[] args) {
 
 		SpringApplication.run(InvOpApplication.class, args);
 		System.out.println("Hola, estoy andando bien");
-	}
-
-	@Bean
-	CommandLineRunner init(){
-		return args -> {
-			Date fechaActual = new Date();
-
-			// Crear un formateador de fecha con el patrón dd/MM/yyyy
-			SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
-
-			// Formatear la fecha actual como cadena
-			String fechaFormateada = formateador.format(fechaActual);
-
-			// Imprimir la fecha formateada
-			System.out.println("Fecha formateada: " + fechaFormateada);
-
-			Articulo articulo1 = Articulo.builder()
-					.nombre("Coca Cola")
-					.fechaAlta(fechaActual)
-					.precioCompra(100)
-					.stockActual(2)
-					.stockDeSeguridad(45)
-					.build();
-
-			articuloRepository.save(articulo1);
-
-			System.out.println(articulo1.getNombre());
-		};
 	}
 
 
