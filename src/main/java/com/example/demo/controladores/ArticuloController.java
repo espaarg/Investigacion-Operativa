@@ -43,9 +43,9 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
         }
     }
     @GetMapping("/allArticuloBajoStock")
-    public ResponseEntity<?> traerArticuloBajoStock(int stockDeSeguridad){
+    public ResponseEntity<?> traerArticuloBajoStock(int stockDeSeguridad, int stockActual){
         try{
-            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerArticuloBajoStock(stockDeSeguridad));
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerArticuloBajoStock(stockDeSeguridad, stockActual));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));

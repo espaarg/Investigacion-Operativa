@@ -22,7 +22,7 @@ public interface ArticuloRepository extends BaseRepository<Articulo, Long>{
     Articulo traerUnArticuloId(@Param("id") Long id);
     @Query(value = "SELECT * FROM articulo a WHERE a.stockActual <= a.stockDeSeguridad",
             nativeQuery = true)
-    List<Articulo> traerArticuloBajoStock(@Param("stockDeSeguridad") int stockDeSeguridad);
+    List<Articulo> traerArticuloBajoStock(@Param("stockDeSeguridad") int stockDeSeguridad, @Param("stockActual") int stockActual);
 
 }
 
