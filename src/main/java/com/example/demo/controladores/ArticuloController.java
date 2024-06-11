@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(origins =  "*")
-@RequestMapping(path = "api/v1/articulo")
+@RequestMapping(path = "/Articulo")
 public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloServiceImpl> {
 
     @GetMapping("/all")
@@ -37,6 +37,15 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
     public ResponseEntity<?> traerUnArticuloId(Long id){
         try{
             return ResponseEntity.status(HttpStatus.OK).body(servicio.traerUnArticuloId(id));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }
+    @GetMapping("/allArticuloBajoStock")
+    public ResponseEntity<?> traerArticuloBajoStock(int stockDeSeguridad){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerArticuloBajoStock(stockDeSeguridad));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));

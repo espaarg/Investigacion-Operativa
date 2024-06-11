@@ -1,7 +1,6 @@
 package com.example.demo.repositorios;
 
 import com.example.demo.entidades.Articulo;
-import org.hibernate.query.Page;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,7 +19,10 @@ public interface ArticuloRepository extends BaseRepository<Articulo, Long>{
 
     @Query(value = "SELECT * FROM articulo a WHERE a.id LIKE %:id% ",
             nativeQuery = true)
-    List<Articulo> traerUnArticuloId(@Param("id") Long id);
+    Articulo traerUnArticuloId(@Param("id") Long id);
+    @Query(value = "SELECT * FROM articulo a WHERE a.stockActual <= a.stockDeSeguridad",
+            nativeQuery = true)
+    List<Articulo> traerArticuloBajoStock(@Param("stockDeSeguridad") int stockDeSeguridad);
 
 }
 

@@ -5,6 +5,7 @@ import com.example.demo.repositorios.ArticuloRepository;
 import com.example.demo.repositorios.BaseRepository;
 import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Pageable;
@@ -105,15 +106,23 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
         }
     }
     @Override
-    public List<Articulo> traerUnArticuloId(Long id) throws Exception {
+    public Articulo traerUnArticuloId(Long id) throws ChangeSetPersister.NotFoundException {
+        // Assuming NotFoundException is a custom exception for indicating that an entity was not found
+        Articulo articulo = articuloRepository.traerUnArticuloId(id);
+        if (articulo == null) {
+            throw new ChangeSetPersister.NotFoundException();
+        }
+        return articulo;
+    }
+    @Override
+    public List<Articulo> traerArticuloBajoStock(int stockDeSeguridad) throws Exception {
         try {
-            List<Articulo> articulo = articuloRepository.traerUnArticuloId(id);
+            List<Articulo> articulo = articuloRepository.traerArticuloBajoStock(stockDeSeguridad);
             return articulo;
         } catch (Exception e){
             throw new Exception(e.getMessage());
         }
     }
-
 
 
     @Override

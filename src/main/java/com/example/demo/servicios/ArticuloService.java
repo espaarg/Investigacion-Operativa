@@ -16,7 +16,8 @@ public interface ArticuloService extends BaseService<Articulo, Long> {
 
             List<ControlStockDTO> controlStockBajo() throws Exception;*/
     List<Articulo> traerUnArticuloNombre(String nombre) throws Exception;
-    List<Articulo> traerUnArticuloId(Long id) throws Exception;
+    public Articulo traerUnArticuloId(Long id) throws Exception;
+    List<Articulo> traerArticuloBajoStock(int stockDeSeguridad) throws Exception;
 
 
 /*
