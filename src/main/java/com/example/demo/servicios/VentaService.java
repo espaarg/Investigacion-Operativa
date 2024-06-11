@@ -13,6 +13,7 @@ public interface VentaService extends BaseService<Venta, Long> {
 
     List<Venta> search(String nombre) throws Exception;
 
+    List<Venta> traerTodasVentas() throws Exception;
 
     List<Venta> findVentasEntreFechas(Date fechaDesde, Date fechaHasta) throws Exception;
 }

@@ -14,17 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(origins =  "*")
-@RequestMapping(path = "api/v1/VentaArticulo")
+@RequestMapping(path = "/VentaArticulo")
 public class VentaArticuloController extends BaseControllerImpl<VentaArticulo, VentaArticuloServiceImpl> {
 
-    /*@GetMapping("/search")
-    public ResponseEntity<?> search(String denominacion) {
+    @GetMapping("/id")
+    public ResponseEntity<?> todoDetalleVenta(Long id) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(servicio.search(denominacion));
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.todoDetalleVenta(id));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }
-    }*/
+    }
 
 }

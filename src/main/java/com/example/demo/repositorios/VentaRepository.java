@@ -15,6 +15,9 @@ public interface VentaRepository extends BaseRepository<Venta, Long>{
             nativeQuery = true)
     List<Venta> searchNativo(@Param("nombre") String nombre);
 
+    @Query(value = "SELECT * FROM venta a",
+            nativeQuery = true)
+    List<Venta> traerTodasVentas();
 
     @Query(
             value = "SELECT * FROM venta v WHERE v.fecha_venta BETWEEN :fechaDesde AND :fechaHasta",

@@ -25,6 +25,15 @@ public class VentaArticuloServiceImpl extends BaseServiceImpl<VentaArticulo, Lon
         this.ventaArticuloRepository = ventaArticuloRepository;
     }
 
+    @Override
+    public List<VentaArticulo> todoDetalleVenta(Long id) throws Exception {
+        try {
+            List<VentaArticulo> ventaArticulos = ventaArticuloRepository.todoDetalleVenta(id);
+            return ventaArticulos;
+        } catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
 
     @Override
     public List<VentaArticulo> search(String nombre) throws Exception {
