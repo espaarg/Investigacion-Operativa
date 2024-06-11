@@ -11,18 +11,18 @@ import java.util.Date;
 
 @RestController
 @CrossOrigin(origins =  "*")
-@RequestMapping(path = "api/v1/Venta")
+@RequestMapping(path = "/Venta")
 public class VentaController extends BaseControllerImpl<Venta, VentaServiceImpl> {
 
-    /*@GetMapping("/search")
-    public ResponseEntity<?> search(String denominacion) {
+    @GetMapping("/all")
+    public ResponseEntity<?> traerTodasVentas() {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(servicio.search(denominacion));
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerTodasVentas());
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }
-    }*/
+    }
 
     @GetMapping("/findVentasEntreFechas")
     public ResponseEntity<?> findVentasByFechas(@RequestParam Date desde, @RequestParam Date hasta) {

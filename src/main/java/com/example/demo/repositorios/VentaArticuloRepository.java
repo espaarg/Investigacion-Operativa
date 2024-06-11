@@ -14,5 +14,9 @@ public interface VentaArticuloRepository extends BaseRepository<VentaArticulo, L
             nativeQuery = true)
     List<VentaArticulo> searchNativo(@Param("nombre") String nombre);
 
+    @Query(value = "SELECT * FROM venta_articulo a WHERE a.venta_id LIKE id ",
+            nativeQuery = true)
+    List<VentaArticulo> todoDetalleVenta(@Param("id") Number id);
+
 }
 

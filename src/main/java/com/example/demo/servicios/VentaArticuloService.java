@@ -12,5 +12,8 @@ public interface VentaArticuloService extends BaseService<VentaArticulo, Long> {
 
     List<VentaArticulo> search(String nombre) throws Exception;
 
+    List<VentaArticulo> todoDetalleVenta(Long id) throws Exception;
+
+
 
 }
