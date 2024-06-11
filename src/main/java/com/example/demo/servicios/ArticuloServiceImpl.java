@@ -114,7 +114,15 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
         }
         return articulo;
     }
-
+    @Override
+    public List<Articulo> traerArticuloBajoStock(int stockDeSeguridad) throws Exception {
+        try {
+            List<Articulo> articulo = articuloRepository.traerArticuloBajoStock(stockDeSeguridad);
+            return articulo;
+        } catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
 
 
     @Override
