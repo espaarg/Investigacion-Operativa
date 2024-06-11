@@ -18,5 +18,6 @@ public interface ArticuloRepository extends BaseRepository<Articulo, Long>{
             nativeQuery = true)
     List<Articulo> searchNativo(@Param("nombre") String nombre);
 
+
 }
 

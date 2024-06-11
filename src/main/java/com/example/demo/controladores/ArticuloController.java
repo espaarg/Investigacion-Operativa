@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(origins =  "*")
-@RequestMapping(path = "/Articulo")
+@RequestMapping(path = "api/v1/articulo")
 public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloServiceImpl> {
 
     @GetMapping("/all")

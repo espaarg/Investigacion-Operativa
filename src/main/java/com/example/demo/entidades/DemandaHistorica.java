@@ -20,9 +20,6 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class DemandaHistorica extends Base{
 
-    private String nombre;
-
-    @NotNull
     @Enumerated(EnumType.STRING)
     private CantidadPeriodo periodo;
 
@@ -37,18 +34,27 @@ public class DemandaHistorica extends Base{
     @Temporal(TemporalType.DATE)
     private Date fechaFin;
 
+    /*
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Articulo articulo;
+
+    */
+
+    /*
     @NotNull
     @Temporal(TemporalType.DATE)
     private Date fechaAlta;
 
+     */
+
     @Temporal(TemporalType.DATE)
     private Date fechaBaja;
 
-    @NotNull
+   /* @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private Venta venta;
 
-    @NotNull
+
     @OneToMany(fetch= FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<DHistoricaVenta> dHistoricaVentaList = new ArrayList<>();
@@ -56,6 +62,6 @@ public class DemandaHistorica extends Base{
     public void AgregarDHistoricaVenta (DHistoricaVenta dHistoricaVenta){
         dHistoricaVentaList.add(dHistoricaVenta);
     }
-
+    */
 
 }
