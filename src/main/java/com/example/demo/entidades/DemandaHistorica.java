@@ -34,11 +34,11 @@ public class DemandaHistorica extends Base{
     @Temporal(TemporalType.DATE)
     private Date fechaFin;
 
-    /*
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Articulo articulo;
 
-    */
+
 
     /*
     @NotNull

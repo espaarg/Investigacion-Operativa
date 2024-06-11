@@ -49,7 +49,7 @@ public class DemandaHistoricaServiceImpl extends BaseServiceImpl<DemandaHistoric
         demandaHistorica.setFechaInicio(fechaDesde);
         demandaHistorica.setFechaFin(fechaHasta);
         demandaHistorica.setFechaBaja(null);
-        //demandaHistorica.setArticulo(ArticuloRepository.encontrarArticulo);
+        demandaHistorica.setArticulo(articuloRepository.traerUnArticuloId(idArticulo));
         demandaHistoricaRepository.save(demandaHistorica);
 
     }
