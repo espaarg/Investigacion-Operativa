@@ -14,7 +14,7 @@ import java.util.Date;
 @RestController
 @CrossOrigin(origins =  "*")
 @RequestMapping(path = "api/v1/demandaHistorica")
-public class DemandaHistoricaController {
+public class   DemandaHistoricaController {
 
     @Autowired
     private DemandaHistoricaService demandaHistoricaService;

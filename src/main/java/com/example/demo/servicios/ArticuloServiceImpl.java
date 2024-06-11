@@ -33,6 +33,8 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
     }
 
 
+
+
 /*    @Override
     public List<BusquedaArticulosDTO> traerTodosArticulos() throws Exception {
         try {
@@ -94,10 +96,19 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
 
 
     @Override
-    public List<Articulo> search(String nombre) throws Exception {
+    public List<Articulo> traerUnArticuloNombre(String nombre) throws Exception {
         try {
-            List<Articulo> articuloInsumos = articuloRepository.searchNativo(nombre);
-            return articuloInsumos;
+            List<Articulo> articulo = articuloRepository.traerUnArticuloNombre(nombre);
+            return articulo;
+        } catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+    @Override
+    public List<Articulo> traerUnArticuloId(Long id) throws Exception {
+        try {
+            List<Articulo> articulo = articuloRepository.traerUnArticuloId(id);
+            return articulo;
         } catch (Exception e){
             throw new Exception(e.getMessage());
         }

@@ -24,6 +24,26 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
         }
     }
 
+    @GetMapping("/oneNombre")
+    public ResponseEntity<?> traerUnArticuloNombre(String nombre){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerUnArticuloNombre(nombre));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }
+    @GetMapping("/oneId")
+    public ResponseEntity<?> traerUnArticuloId(Long id){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerUnArticuloId(id));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }
+
+
     /*
     public ResponseEntity<?> search(String denominacion) {
         try {
