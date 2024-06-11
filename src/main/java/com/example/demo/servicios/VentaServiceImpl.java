@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Pageable;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -36,6 +37,15 @@ public class VentaServiceImpl extends BaseServiceImpl<Venta, Long> implements Ve
         }
     }
 
+    @Override
+    public List<Venta> findVentasEntreFechas(Date fechaDesde, Date fechaHasta) throws Exception{
+        try {
+            List<Venta> ventas = ventaRepository.findVentasEntreFechas(fechaDesde, fechaHasta);
+            return ventas;
+        } catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
 
 
     @Override
