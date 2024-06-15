@@ -11,15 +11,15 @@ import java.util.List;
 public interface ArticuloService extends BaseService<Articulo, Long> {
 
     List<Articulo> traerTodosArticulos() throws Exception;
-
-    /*    List<ControlStockDTO> controlStockInsuficiente() throws Exception;
-
-            List<ControlStockDTO> controlStockBajo() throws Exception;*/
     List<Articulo> traerUnArticuloNombre(String nombre) throws Exception;
     Articulo traerUnArticuloId(Long id) throws Exception;
     List<Articulo> traerArticuloBajoStock(int stockDeSeguridad, int stockActual) throws Exception;
 
+    public void calcularCGI() throws Exception;
 
+/*    List<ControlStockDTO> controlStockInsuficiente() throws Exception;
+
+            List<ControlStockDTO> controlStockBajo() throws Exception;*/
 /*
     Page<Articulo> search(String denominacion, Number min, Number max, Number stockMenor, Number minStock, Number maxStock, Pageable pageable) throws Exception;
 */

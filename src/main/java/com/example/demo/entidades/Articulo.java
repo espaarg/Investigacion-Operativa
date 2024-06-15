@@ -1,10 +1,8 @@
 package com.example.demo.entidades;
 
+import com.example.demo.enums.ModeloInventario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -28,16 +26,23 @@ public class Articulo extends Base {
     @NotNull
     private int stockActual;
 
-    @NotNull
-    private int stockDeSeguridad;
+    private int costoPedido;
+
+    private int costoAlmacenamiento;
 
     private int loteOptimo;
 
     private float cgiArticulo;
 
     @NotNull
+    private int stockDeSeguridad;
+
+    @NotNull
     @Temporal(TemporalType.DATE)
     private Date fechaAlta;
+
+    @Enumerated(EnumType.STRING)
+    private ModeloInventario modeloInventario;
 
 
 }

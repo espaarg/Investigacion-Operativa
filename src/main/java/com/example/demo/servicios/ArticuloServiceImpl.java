@@ -33,6 +33,9 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
         }
     }
 
+    public void calcularCGI() throws Exception{
+
+    }
 
 
 
