@@ -15,5 +15,10 @@ public interface OrdenDeCompraRepository extends BaseRepository<OrdenDeCompra, L
             nativeQuery = true)
     List<OrdenDeCompra> searchNativo(@Param("nombre") String nombre);
 
+    @Query(value = "SELECT * FROM orden_de_compra WHERE estado_orden_de_compra LIKE %:estado%",
+            nativeQuery = true
+    )
+    List<OrdenDeCompra> filtrarOrdenDeCompraPorEstado(@Param("estado") String estado);
+
 }
 
