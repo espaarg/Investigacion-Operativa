@@ -13,16 +13,27 @@ import java.util.Date;
 
 @RestController
 @CrossOrigin(origins =  "*")
-@RequestMapping(path = "api/v1/demandaHistorica")
+@RequestMapping(path = "/DemandaHistorica")
 public class   DemandaHistoricaController {
 
     @Autowired
     private DemandaHistoricaService demandaHistoricaService;
 
+    @GetMapping("/all")
+    public ResponseEntity<?> traerTodasDemandasH(){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(demandaHistoricaService.traerTodasDemandasH());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }
+
+
     @PostMapping("/create")
     public ResponseEntity<?> crearDemandaHistorica(@RequestParam Long idArticulo,
-                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaDesde,
-                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaHasta) {
+                                                   @RequestParam String fechaDesde,
+                                                   @RequestParam String fechaHasta) {
         try {
             demandaHistoricaService.crearDemandaHistorica(idArticulo, fechaDesde, fechaHasta);
             return ResponseEntity.status(HttpStatus.CREATED).body("DemandaHistorica creada");
@@ -30,6 +41,28 @@ public class   DemandaHistoricaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+
+    @PostMapping("/create2")
+    public ResponseEntity<?> crearDemandaH(@RequestParam Long idArticulo,
+                                                   @RequestParam String fechaDesde,
+                                                   @RequestParam String fechaHasta) {
+        try {
+            demandaHistoricaService.crearDemandaHistorica(idArticulo, fechaDesde, fechaHasta);
+            return ResponseEntity.status(HttpStatus.CREATED).body("DemandaHistorica creada");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+   /* @GetMapping("/all")
+    public ResponseEntity<?> traerTodosArticulos(){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerTodosArticulos());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }*/
 
 
 

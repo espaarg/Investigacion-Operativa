@@ -1,16 +1,21 @@
 package com.example.demo.servicios;
-import com.example.demo.entidades.DemandaHistorica;
-import com.example.demo.entidades.OrdenDeCompra;
-import com.example.demo.entidades.Venta;
-import com.example.demo.entidades.VentaArticulo;
+import com.example.demo.dtos.DemandaHistoricaDTO;
+import com.example.demo.dtos.VentaArticuloDTO;
+import com.example.demo.entidades.*;
 import com.example.demo.repositorios.*;
 import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Pageable;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Service
 public class DemandaHistoricaServiceImpl extends BaseServiceImpl<DemandaHistorica, Long> implements DemandaHistoricaService{
 
@@ -28,7 +33,7 @@ public class DemandaHistoricaServiceImpl extends BaseServiceImpl<DemandaHistoric
         this.demandaHistoricaRepository = demandaHistoricaRepository;
     }
 
-    public void crearDemandaHistorica(Long idArticulo, Date fechaDesde, Date fechaHasta) throws Exception {
+    public void crearDemandaHistorica(Long idArticulo, String fechaDesde, String fechaHasta) throws Exception {
         //me traigo las ventas en esas fechas
         List<Venta> ventas = ventaRepository.findVentasEntreFechas(fechaDesde, fechaHasta);
 
@@ -43,15 +48,55 @@ public class DemandaHistoricaServiceImpl extends BaseServiceImpl<DemandaHistoric
             }
         }
 
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date desde = formatter.parse(fechaDesde);
+        Date hasta = formatter.parse(fechaHasta);
+
         //creo nueva demanda historica
         DemandaHistorica demandaHistorica = new DemandaHistorica();
         demandaHistorica.setCantidadVendida(cantVendida);
-        demandaHistorica.setFechaInicio(fechaDesde);
-        demandaHistorica.setFechaFin(fechaHasta);
+        demandaHistorica.setFechaInicio(desde);
+        demandaHistorica.setFechaFin(hasta);
         demandaHistorica.setFechaBaja(null);
         demandaHistorica.setArticulo(articuloRepository.traerUnArticuloId(idArticulo));
         demandaHistoricaRepository.save(demandaHistorica);
 
+    }
+
+    @Override
+    public void crearDemandaH(Long idArticulo, String fechaIni, String fechaFin) throws Exception {
+
+        float cantVendida = demandaHistoricaRepository.cantidadDemanda(idArticulo, fechaIni, fechaFin);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date desde = formatter.parse(fechaIni);
+        Date hasta = formatter.parse(fechaFin);
+
+        DemandaHistorica demandaHistorica = new DemandaHistorica();
+        demandaHistorica.setCantidadVendida((int) cantVendida);
+        demandaHistorica.setFechaInicio(desde);
+        demandaHistorica.setFechaFin(hasta);
+        demandaHistorica.setFechaBaja(null);
+        demandaHistorica.setArticulo(articuloRepository.traerUnArticuloId(idArticulo));
+        demandaHistoricaRepository.save(demandaHistorica);
+
+    }
+
+    @Override
+    public List<DemandaHistoricaDTO> traerTodasDemandasH() throws Exception {
+        List<DemandaHistoricaDTO> dHList;
+        List<Map<String, Object>> demandasH = demandaHistoricaRepository.traerTodasDemandasH();
+
+        dHList = demandasH.stream()
+                .map(result->new DemandaHistoricaDTO(
+                        ((long) result.get("id")),
+                        ((int) result.get("cantidadVendida")),
+                        (String) result.get("fechaFin").toString(),
+                        ((String) result.get("fechaInicio").toString()),
+                        ((String) result.get("nombreArticulo"))))
+                .collect(Collectors.toList());
+
+        return dHList;
     }
 
     @Override

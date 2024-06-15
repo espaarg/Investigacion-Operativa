@@ -25,10 +25,10 @@ public class VentaController extends BaseControllerImpl<Venta, VentaServiceImpl>
     }
 
     @GetMapping("/findVentasEntreFechas")
-    public ResponseEntity<?> findVentasByFechas(@RequestParam Date desde, @RequestParam Date hasta) {
+    public ResponseEntity<?> findVentasByFechas(@RequestParam String desde, @RequestParam String hasta) {
         try {
-            Date fechaDesde = desde;
-            Date fechaHasta = hasta;
+            String fechaDesde = desde;
+            String fechaHasta = hasta;
             return ResponseEntity.status(HttpStatus.OK).body(servicio.findVentasEntreFechas(fechaDesde, fechaHasta));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));

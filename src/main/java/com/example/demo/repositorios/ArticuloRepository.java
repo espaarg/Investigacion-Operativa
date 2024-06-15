@@ -17,7 +17,7 @@ public interface ArticuloRepository extends BaseRepository<Articulo, Long>{
             nativeQuery = true)
     List<Articulo> traerUnArticuloNombre(@Param("nombre") String nombre);
 
-    @Query(value = "SELECT * FROM articulo a WHERE a.id LIKE %:id% ",
+    @Query(value = "SELECT * FROM articulo a WHERE a.id = %:id% ",
             nativeQuery = true)
     Articulo traerUnArticuloId(@Param("id") Long id);
     @Query(value = "SELECT * FROM articulo a WHERE a.stockActual <= a.stockDeSeguridad",

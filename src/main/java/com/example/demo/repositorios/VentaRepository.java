@@ -20,8 +20,8 @@ public interface VentaRepository extends BaseRepository<Venta, Long>{
     List<Venta> traerTodasVentas();
 
     @Query(
-            value = "SELECT * FROM venta v WHERE v.fecha_venta BETWEEN :fechaDesde AND :fechaHasta",
+            value = "SELECT * FROM venta v WHERE v.fecha_venta BETWEEN %:fechaDesde% AND %:fechaHasta%",
             nativeQuery = true
             )
-    List<Venta> findVentasEntreFechas(@Param("fechaDesde") Date fechaDesde, @Param("fechaHasta") Date fechaHasta);
+    List<Venta> findVentasEntreFechas(@Param("fechaDesde") String fechaDesde, @Param("fechaHasta") String fechaHasta);
 }

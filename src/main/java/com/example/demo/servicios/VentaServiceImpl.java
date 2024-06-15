@@ -57,7 +57,7 @@ public class VentaServiceImpl extends BaseServiceImpl<Venta, Long> implements Ve
     }
 
     @Override
-    public List<Venta> findVentasEntreFechas(Date fechaDesde, Date fechaHasta) throws Exception{
+    public List<Venta> findVentasEntreFechas(String fechaDesde, String fechaHasta) throws Exception{
         try {
             List<Venta> ventas = ventaRepository.findVentasEntreFechas(fechaDesde, fechaHasta);
             return ventas;
