@@ -100,8 +100,15 @@ public class DemandaHistoricaServiceImpl extends BaseServiceImpl<DemandaHistoric
     }
 
     @Override
+    public void eliminarDemandaHistorica(Long id) throws Exception {
+        demandaHistoricaRepository.deleteById(id);
+    }
+
+    @Override
     public Page findAllPageable(Pageable pageable) throws Exception {
         return null;
     }
+
+
 
 }

@@ -54,15 +54,16 @@ public class   DemandaHistoricaController {
         }
     }
 
-   /* @GetMapping("/all")
-    public ResponseEntity<?> traerTodosArticulos(){
-        try{
-            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerTodosArticulos());
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteDemandaHistorica(@PathVariable Long id) {
+        try {
+            demandaHistoricaService.eliminarDemandaHistorica(id);
+            return ResponseEntity.status(HttpStatus.OK).body("DemandaHistorica eliminada");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
-    }*/
+    }
 
 
 
