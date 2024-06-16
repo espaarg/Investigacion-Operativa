@@ -7,6 +7,9 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface PedidoArticuloService extends BaseService<PedidoArticulo, Long>{
+
+   PedidoArticulo crearPedidoArticulo(int cantidad, long idArticulo, long idOrdenDeCompra) throws Exception;
+
    /* PedidoArticulo cambiarEstado(DTOCambiarEstado cambiarEstadoDTO) throws Exception;
    */
    List<PedidoArticulo> search(String filtro) throws Exception;

@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface ProveedorArticuloService extends BaseService<ProveedorArticulo, Long>{
 
+    List<ProveedorArticulo> traerTodosProveedores() throws Exception;
     List<ProveedorArticulo> search(String codigo) throws Exception;
     Page<ProveedorArticulo> search(String codigo, Pageable pageable) throws Exception;
 }

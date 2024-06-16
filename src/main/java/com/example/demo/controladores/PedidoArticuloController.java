@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping(path = "api/v1/pedidoArticulo")
+@RequestMapping(path = "/PedidoArticulo")
 public class PedidoArticuloController extends BaseControllerImpl<PedidoArticulo, PedidoArticuloServiceImpl>{
 
     @GetMapping("/search")
@@ -20,6 +20,15 @@ public class PedidoArticuloController extends BaseControllerImpl<PedidoArticulo,
         try {
             return ResponseEntity.status(HttpStatus.OK).body(servicio.search(filtro));
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> crearPedidoArticulo(@RequestParam int cantidad, long idArticulo, long idOrdenDecompra){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.crearPedidoArticulo(cantidad,idArticulo,idOrdenDecompra));
+        } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }
     }

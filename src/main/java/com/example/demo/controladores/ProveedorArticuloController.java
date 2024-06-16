@@ -10,13 +10,23 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping(path = "api/v1/proveedorArticulo")
+@RequestMapping(path = "/Proveedor")
 public class ProveedorArticuloController extends BaseControllerImpl<ProveedorArticulo, ProveedorArticuloServiceImpl>{
 
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam String codigo) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(servicio.search(codigo));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> traerTodosArticulos(){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerTodosProveedores());
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }

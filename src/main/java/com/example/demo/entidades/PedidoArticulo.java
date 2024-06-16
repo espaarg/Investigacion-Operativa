@@ -2,7 +2,6 @@ package com.example.demo.entidades;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 

@@ -1,6 +1,7 @@
 package com.example.demo.repositorios;
 
 
+import com.example.demo.entidades.Articulo;
 import com.example.demo.entidades.OrdenDeCompra;
 import org.hibernate.query.Page;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,8 @@ import java.util.List;
 
 public interface OrdenDeCompraRepository extends BaseRepository<OrdenDeCompra, Long>{
 
+    @Query(value = "SELECT * FROM orden_de_compra", nativeQuery = true)
+    List<OrdenDeCompra> traerTodasOrdenes();
 
     @Query(value = "SELECT * FROM articulo a WHERE a.nombre LIKE %:nombre% ",
             nativeQuery = true)

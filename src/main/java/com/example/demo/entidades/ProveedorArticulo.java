@@ -18,13 +18,14 @@ import java.util.Date;
 public class ProveedorArticulo extends Base{
 
     @NotNull
-    private int puntoPedido;
+    private String nombreProveedor;
+
+    @NotNull
+    private int diasDemora;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private Articulo articulo;
 
-    @Enumerated(EnumType.STRING)
-    private Proveedor proveedor;
 
 }

@@ -29,6 +29,16 @@ public class ProveedorArticuloServiceImpl extends BaseServiceImpl<ProveedorArtic
     }
 
     @Override
+    public List<ProveedorArticulo> traerTodosProveedores() throws Exception {
+        try {
+            List<ProveedorArticulo> proveedores = proveedorArticuloRepository.traerTodosProveedores();
+            return proveedores;
+        }catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
     public List<ProveedorArticulo> search(String codigo) throws Exception {
         return null;
     }

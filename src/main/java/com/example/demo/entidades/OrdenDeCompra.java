@@ -22,19 +22,14 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class OrdenDeCompra extends Base{
 
-    private String descripcion;
 
-    @NotNull
-    private int TotalCompra;
+    private float totalCompra;
 
-    @NotNull
-    private int TotalArticulos;
+    private int totalArticulos;
 
-    @NotNull
     @Temporal(TemporalType.DATE)
     private Date fechaPedido;
 
-    @NotNull
     @Temporal(TemporalType.DATE)
     private Date fechaBaja;
 
@@ -44,18 +39,8 @@ public class OrdenDeCompra extends Base{
     @Enumerated(EnumType.STRING)
     private EstadoOrdenDeCompra estadoOrdenDeCompra;
 
-    @Enumerated(EnumType.STRING)
-    private Proveedor proveedor;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @NotNull
-    @Builder.Default
-    private List<PedidoArticulo> pedidoArticulos = new ArrayList<>();
-
-
-     public void AgregarPedidoArticulo (PedidoArticulo pedidoArticulo){
-        pedidoArticulos.add(pedidoArticulo);
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ProveedorArticulo proveedorArticulo;
 
 
 }
