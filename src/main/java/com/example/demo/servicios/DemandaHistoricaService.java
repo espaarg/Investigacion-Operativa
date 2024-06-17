@@ -16,4 +16,6 @@ public interface DemandaHistoricaService extends BaseService<DemandaHistorica, L
     List<DemandaHistoricaDTO> traerTodasDemandasH() throws Exception;
 
     void eliminarDemandaHistorica(Long id) throws Exception;
+
+    Integer obtenerDemandaAnual(Long idArticulo) throws Exception;
 }

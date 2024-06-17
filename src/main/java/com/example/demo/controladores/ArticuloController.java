@@ -66,6 +66,16 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
         }
     }
 
+    @GetMapping("/calcularLoteOptimo")
+    public ResponseEntity<?> calcularLoteOptimo(@RequestParam Long idArticulo) {
+        try {
+            double loteOptimo = servicio.calcularLoteOptimo(idArticulo);
+            return ResponseEntity.status(HttpStatus.OK).body("{\"loteOptimo\": " + loteOptimo + "}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
 
     /*
     public ResponseEntity<?> search(String denominacion) {

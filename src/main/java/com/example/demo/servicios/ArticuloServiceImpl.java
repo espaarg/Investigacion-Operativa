@@ -1,8 +1,13 @@
 package com.example.demo.servicios;
 
 import com.example.demo.entidades.Articulo;
+import com.example.demo.entidades.DemandaHistorica;
+import com.example.demo.entidades.ProveedorArticulo;
+import com.example.demo.enums.ModeloInventario;
 import com.example.demo.repositorios.ArticuloRepository;
 import com.example.demo.repositorios.BaseRepository;
+import com.example.demo.repositorios.DemandaHistoricaRepository;
+import com.example.demo.repositorios.ProveedorArticuloRepository;
 import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -10,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.awt.print.Pageable;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 
@@ -17,6 +23,9 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
 
     @Autowired
     private ArticuloRepository articuloRepository;
+
+    @Autowired
+    private DemandaHistoricaService demandaHistoricaService;
 
     public ArticuloServiceImpl(BaseRepository<Articulo, Long> baseRepository, ArticuloRepository articuloRepository) {
         super(baseRepository);
@@ -37,7 +46,33 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
 
     }
 
+    @Override
+    public double calcularLoteOptimo(Long idArticulo) throws Exception {
+        try {
+            Articulo articulo = articuloRepository.findById(idArticulo)
+                    .orElseThrow(() -> new Exception("Artículo no encontrado con id: " + idArticulo));
+            ProveedorArticulo proveedorArticulo = articulo.getProveedorArticulo();
+            // Verificar si el modelo de inventario es Lote Fijo
+            if (articulo.getModeloInventario() == ModeloInventario.LoteFijo) {
+                double demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
+                double eoq = Math.sqrt((2 * proveedorArticulo.getCostoPedido() * demandaAnual) / articulo.getCostoAlmacenamiento());
+                articulo.setLoteOptimo((int) eoq);
+                articuloRepository.save(articulo);
+                return eoq;
+            } else {
+                throw new Exception("El modelo de inventario no es Lote Fijo. No se puede calcular el lote óptimo.");
+            }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
 
+    /*public int calcularStockSeguridad(int puntoPedido, int demoraProveedor) {
+        demoraProveedor = ProveedorArticulo.getDiasDemora();
+        int stockDeSeguridad = puntoPedido * demoraProveedor;
+        return this.stockDeSeguridad = stockDeSeguridad;
+    }
+*/
 
 /*    @Override
     public List<BusquedaArticulosDTO> traerTodosArticulos() throws Exception {

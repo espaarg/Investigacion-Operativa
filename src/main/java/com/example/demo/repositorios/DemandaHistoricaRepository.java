@@ -20,4 +20,11 @@ public interface DemandaHistoricaRepository extends BaseRepository<DemandaHistor
             "FROM demanda_historica dh " +
             "JOIN articulo a ON dh.articulo_id = a.id;", nativeQuery = true)
     List<Map<String, Object>> traerTodasDemandasH();
+
+    @Query(value = "SELECT dh.cantidadVendida " +
+            "FROM DemandaHistorica dh " +
+            "WHERE dh.articulo.id = :idArticulo " +
+            "ORDER BY dh.fechaFin DESC " +
+            "LIMIT 1", nativeQuery = false)
+    Integer findCantidadVendidaMasReciente(@Param("idArticulo") Long idArticulo);
 }

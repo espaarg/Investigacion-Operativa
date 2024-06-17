@@ -1,7 +1,9 @@
 package com.example.demo.servicios;
 
 import com.example.demo.entidades.Articulo;
+import com.example.demo.entidades.DemandaHistorica;
 import com.example.demo.entidades.PedidoArticulo;
+import com.example.demo.enums.ModeloInventario;
 import org.hibernate.query.Page;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +25,11 @@ public interface ArticuloService extends BaseService<Articulo, Long> {
 /*
     Page<Articulo> search(String denominacion, Number min, Number max, Number stockMenor, Number minStock, Number maxStock, Pageable pageable) throws Exception;
 */
+
+    public double calcularLoteOptimo(Long idArticulo) throws Exception;
+
+
+    /*public double calcularStockDeSeguridad() throws Exception;*/
+
 }
 

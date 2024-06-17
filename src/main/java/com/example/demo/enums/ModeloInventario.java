@@ -4,5 +4,9 @@ public enum ModeloInventario {
 
     LoteFijo,
 
-    IntervaloFijo
+    IntervaloFijo;
+
+    public static String getModeloInventario() {
+        return null;
+    }
 }

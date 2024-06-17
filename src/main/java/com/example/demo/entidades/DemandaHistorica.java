@@ -7,6 +7,11 @@ import jakarta.persistence.Table;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,17 +43,19 @@ public class DemandaHistorica extends Base{
     @ManyToOne(fetch = FetchType.LAZY)
     private Articulo articulo;
 
-
-
     /*
     @NotNull
     @Temporal(TemporalType.DATE)
     private Date fechaAlta;
 
      */
-
     @Temporal(TemporalType.DATE)
     private Date fechaBaja;
+
+    public double getCantidadVendida() {
+
+        return cantidadVendida;
+    }
 
    /* @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -63,5 +70,8 @@ public class DemandaHistorica extends Base{
         dHistoricaVentaList.add(dHistoricaVenta);
     }
     */
+
+
+
 
 }

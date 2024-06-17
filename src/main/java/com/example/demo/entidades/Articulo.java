@@ -7,6 +7,7 @@ import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
@@ -47,5 +48,22 @@ public class Articulo extends Base {
     @ManyToOne(fetch = FetchType.LAZY)
     private ProveedorArticulo proveedorArticulo;
 
+
+    public ModeloInventario getModeloInventario() {
+        return modeloInventario;
+    }
+
+    public ProveedorArticulo getProveedorArticulo() {
+        return proveedorArticulo;
+    }
+
+    public double getCostoAlmacenamiento() {
+        return costoAlmacenamiento;
+    }
+
+
+    public void setLoteOptimo(int loteOptimo) {
+        this.loteOptimo = loteOptimo;
+    }
 
 }
