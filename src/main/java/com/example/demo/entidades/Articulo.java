@@ -25,9 +25,7 @@ public class Articulo extends Base {
 
     @NotNull
     private int stockActual;
-
-    private int costoPedido;
-
+    
     private int costoAlmacenamiento;
 
     private int loteOptimo;
