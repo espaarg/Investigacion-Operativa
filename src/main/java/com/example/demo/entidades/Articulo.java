@@ -34,6 +34,8 @@ public class Articulo extends Base {
 
     private float cgiArticulo;
 
+    private int puntoPedido;
+
     @NotNull
     private int stockDeSeguridad;
 
