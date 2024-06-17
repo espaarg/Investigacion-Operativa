@@ -4,10 +4,7 @@ import com.example.demo.entidades.Articulo;
 import com.example.demo.servicios.ArticuloServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins =  "*")
@@ -23,6 +20,23 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }
     }
+
+ /*   @PostMapping("/create")
+    public ResponseEntity<?> crearArticulo(@RequestParam String nombre,
+                                                   @RequestParam float precioCompra,
+                                                   @RequestParam int stockActual,
+                                           @RequestParam int loteOptimo,
+                                           @RequestParam float cgiArticulo,
+                                           @RequestParam int puntoPedido,
+                                           @RequestParam int stockDeSeguridad
+                                           ) {
+        try {
+            demandaHistoricaService.crearDemandaHistorica(idArticulo, fechaDesde, fechaHasta);
+            return ResponseEntity.status(HttpStatus.CREATED).body("DemandaHistorica creada");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }*/
 
     @GetMapping("/oneNombre")
     public ResponseEntity<?> traerUnArticuloNombre(String nombre){

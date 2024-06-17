@@ -25,7 +25,7 @@ public class Articulo extends Base {
 
     @NotNull
     private int stockActual;
-    
+
     private int costoAlmacenamiento;
 
     private int loteOptimo;
@@ -43,6 +43,9 @@ public class Articulo extends Base {
 
     @Enumerated(EnumType.STRING)
     private ModeloInventario modeloInventario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ProveedorArticulo proveedorArticulo;
 
 
 }
