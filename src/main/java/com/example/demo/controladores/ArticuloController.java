@@ -85,6 +85,17 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+
+    @GetMapping("/calcularCostoAlmacenamiento")
+    public ResponseEntity<?> calcularCostoAlmacenamiento(@RequestParam Long idArticulo, @RequestParam Long idMultiplicador) {
+        try {
+            float costoAlmacenamiento = servicio.calcularCostoAlmacenamiento(idArticulo, idMultiplicador);
+            return ResponseEntity.status(HttpStatus.OK).body("{\"costoAlmacenamiento\": " + costoAlmacenamiento + "}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
    /* @GetMapping("/calcularCGI")
     public ResponseEntity<?> calcularCGI(int stockActual, float precioCompra) {
         try{

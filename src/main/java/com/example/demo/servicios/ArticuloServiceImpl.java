@@ -3,6 +3,8 @@ package com.example.demo.servicios;
 import com.example.demo.entidades.Articulo;
 import com.example.demo.entidades.ProveedorArticulo;
 import com.example.demo.enums.ModeloInventario;
+import com.example.demo.parametros.multiplicadorCostoAlmacenamiento.MultiplicadorCostoAlmacenamiento;
+import com.example.demo.parametros.multiplicadorCostoAlmacenamiento.MultiplicadorCostoAlmacenamientoRepository;
 import com.example.demo.repositorios.ArticuloRepository;
 import com.example.demo.repositorios.BaseRepository;
 import org.hibernate.query.Page;
@@ -21,6 +23,9 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
 
     @Autowired
     private ArticuloRepository articuloRepository;
+
+    @Autowired
+    private MultiplicadorCostoAlmacenamientoRepository multiplicadorCostoAlmacenamientoRepository;
 
     @Autowired
     private DemandaHistoricaService demandaHistoricaService;
@@ -63,6 +68,24 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
             }
         } catch (Exception e) {
             throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public float calcularCostoAlmacenamiento(Long idArticulo, Long idMultiplicador) throws Exception {
+        try {
+            Articulo articulo = articuloRepository.findById(idArticulo)
+                    .orElseThrow(() -> new Exception("Artículo no encontrado"));
+            MultiplicadorCostoAlmacenamiento multiplicador = multiplicadorCostoAlmacenamientoRepository.findById(idMultiplicador)
+                    .orElseThrow(() -> new Exception("Multiplicador no encontrado"));
+
+            float costoAlmacenamiento = multiplicador.getValor() * articulo.getPrecioCompra();
+            articulo.setCostoAlmacenamiento(costoAlmacenamiento);
+            articuloRepository.save(articulo);
+
+            return costoAlmacenamiento;
+        } catch (Exception e) {
+            throw new Exception("Error al calcular el costo de almacenamiento: " + e.getMessage());
         }
     }
 
