@@ -7,6 +7,7 @@ import com.example.demo.parametros.multiplicadorCostoAlmacenamiento.Multiplicado
 import com.example.demo.parametros.multiplicadorCostoAlmacenamiento.MultiplicadorCostoAlmacenamientoRepository;
 import com.example.demo.repositorios.ArticuloRepository;
 import com.example.demo.repositorios.BaseRepository;
+import com.example.demo.repositorios.ProveedorArticuloRepository;
 import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -26,6 +27,9 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
 
     @Autowired
     private MultiplicadorCostoAlmacenamientoRepository multiplicadorCostoAlmacenamientoRepository;
+
+    @Autowired
+    private ProveedorArticuloRepository proveedorArticuloRepository;
 
     @Autowired
     private DemandaHistoricaService demandaHistoricaService;
@@ -86,6 +90,27 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
             return costoAlmacenamiento;
         } catch (Exception e) {
             throw new Exception("Error al calcular el costo de almacenamiento: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public int calcularPuntoPedido(Long idArticulo, Long idProveedor) throws Exception {
+        try {
+            Articulo articulo = articuloRepository.findById(idArticulo)
+                    .orElseThrow(() -> new Exception("Artículo no encontrado"));
+            ProveedorArticulo proveedor = proveedorArticuloRepository.findById(idProveedor)
+                    .orElseThrow(() -> new Exception("Proveedor no encontrado"));
+
+            // Obtener la demanda anual desde DemandaHistoricaService
+            int demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
+
+            int puntoPedido = demandaAnual * proveedor.getDiasDemora();
+            articulo.setPuntoPedido(puntoPedido);
+            articuloRepository.save(articulo);
+
+            return puntoPedido;
+        } catch (Exception e) {
+            throw new Exception("Error al calcular el punto de pedido: " + e.getMessage());
         }
     }
 

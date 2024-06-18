@@ -96,6 +96,16 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
         }
     }
 
+    @GetMapping("/calcularPuntoPedido")
+    public ResponseEntity<?> calcularPuntoPedido(@RequestParam Long idArticulo, @RequestParam Long idProveedor) {
+        try {
+            int puntoPedido = servicio.calcularPuntoPedido(idArticulo, idProveedor);
+            return ResponseEntity.status(HttpStatus.OK).body("{\"puntoPedido\": " + puntoPedido + "}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
    /* @GetMapping("/calcularCGI")
     public ResponseEntity<?> calcularCGI(int stockActual, float precioCompra) {
         try{

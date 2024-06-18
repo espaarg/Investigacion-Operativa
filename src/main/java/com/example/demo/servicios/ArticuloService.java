@@ -32,6 +32,8 @@ public interface ArticuloService extends BaseService<Articulo, Long> {
 
     float calcularCostoAlmacenamiento(Long idArticulo, Long idMultiplicador) throws Exception;
 
+    int calcularPuntoPedido(Long idArticulo, Long idProveedor) throws Exception;
+
     public void darDeBajaArticulo(Articulo articulo) throws Exception;
 
 
