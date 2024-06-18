@@ -15,6 +15,9 @@ import java.util.List;
 @RequestMapping(path = "/Articulo")
 public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloServiceImpl> {
 
+    @Autowired
+    private ArticuloService articuloService;
+
     @GetMapping("/all")
     public ResponseEntity<?> traerTodosArticulos(){
         try{
@@ -59,6 +62,17 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }
+
+    @PutMapping("/baja/{id}")
+    public ResponseEntity<String> darDeBajaArticulo(@PathVariable Long id) {
+        try {
+            Articulo articulo = articuloService.traerUnArticuloId(id);
+            articuloService.darDeBajaArticulo(articulo);
+            return ResponseEntity.ok("Artículo dado de baja correctamente.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 

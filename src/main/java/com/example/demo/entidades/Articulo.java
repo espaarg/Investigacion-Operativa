@@ -42,6 +42,9 @@ public class Articulo extends Base {
     @Temporal(TemporalType.DATE)
     private Date fechaAlta;
 
+    @Temporal(TemporalType.DATE)
+    private Date fechaBaja;
+
     @Enumerated(EnumType.STRING)
     private ModeloInventario modeloInventario;
 

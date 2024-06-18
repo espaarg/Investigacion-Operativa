@@ -18,9 +18,9 @@ public interface OrdenDeCompraService extends BaseService<OrdenDeCompra, Long> {
 
     List<OrdenDeCompra> filtrarOrdenDeCompraPorEstado(String estado) throws Exception;
 
-/*
+
     boolean buscarOrdenesActivas(Articulo articulo) throws Exception;
-*/
+
     void crearOrdenDeCompra(List<PedidoArticuloDTO> pedidoArticulos) throws Exception;
 
 

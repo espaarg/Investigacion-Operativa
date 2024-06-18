@@ -7,6 +7,7 @@ import com.example.demo.entidades.Articulo;
 import com.example.demo.entidades.OrdenDeCompra;
 import com.example.demo.entidades.PedidoArticulo;
 import com.example.demo.entidades.ProveedorArticulo;
+import com.example.demo.enums.EstadoOrdenDeCompra;
 import com.example.demo.repositorios.*;
 import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,60 @@ public class OrdenDeCompraServiceImpl extends BaseServiceImpl<OrdenDeCompra, Lon
         ordenDeCompraRepository.save(ordenDeCompra);
     }
 
+
+    /*
+@Override
+public void crearOrdenDeCompra(List<PedidoArticuloDTO> pedidoArticulos) throws Exception {
+    ProveedorArticulo proveedorPredeterminado = ;
+    int tamanoLotePredeterminado = 15;
+
+    OrdenDeCompra ordenDeCompra = new OrdenDeCompra();
+    ordenDeCompra.setEstadoOrdenDeCompra(EstadoOrdenDeCompra.Pendiente);
+
+    LocalDate fechaPedido = LocalDate.now();
+    ordenDeCompra.setFechaPedido(java.sql.Date.valueOf(fechaPedido));
+
+    int cantidadArticulos = 0;
+    float sumaTotal = 0;
+
+    List<PedidoArticulo> pedidos = new ArrayList<>();
+
+    for (PedidoArticuloDTO pedido : pedidoArticulos) {
+        Articulo articulo = articuloRepository.findById(pedido.getIdArticulo())
+                .orElseThrow(() -> new Exception("Artículo no encontrado"));
+
+        // Verificar si hay órdenes activas para este artículo
+        if (buscarOrdenesActivas(articulo)) {
+            throw new Exception("No se puede crear la orden de compra. Existe una orden activa para el artículo.");
+        }
+
+        // Crear el pedido de artículo
+        PedidoArticulo pedidoArticulo = PedidoArticulo.builder()
+                .cantidad(pedido.getCantidad())
+                .articulo(articulo)
+                .ordenDeCompra(ordenDeCompra)
+                .build();
+
+        pedidos.add(pedidoArticulo);
+
+        cantidadArticulos += pedido.getCantidad();
+        sumaTotal += articulo.getPrecioCompra();
+    }
+
+
+    // Establecer proveedor y pedidos en la orden de compra
+    ordenDeCompra.setProveedorArticulo();
+    ordenDeCompra.setPedidoArticulo(pedidos);
+
+    // Establecer total de artículos y total de compra
+    ordenDeCompra.setTotalArticulos(cantidadArticulos);
+    ordenDeCompra.setTotalCompra(sumaTotal);
+
+    ordenDeCompraRepository.save(ordenDeCompra);
+}
+
+     */
+
     @Override
     public List<OrdenDeCompraDTO> traerTodasOrdenes() throws Exception {
         List<OrdenDeCompra> ordenDeCompras = ordenDeCompraRepository.traerTodasOrdenes();
@@ -100,7 +155,7 @@ public class OrdenDeCompraServiceImpl extends BaseServiceImpl<OrdenDeCompra, Lon
         return ordenDeCompraDTOS;
     }
 
-/*
+
     @Override
     public boolean buscarOrdenesActivas(Articulo articulo) throws Exception {
         try {
@@ -112,7 +167,7 @@ public class OrdenDeCompraServiceImpl extends BaseServiceImpl<OrdenDeCompra, Lon
             Long art_id= articulo.getId();
 
             for (OrdenDeCompra orden : ordenesActivas){
-                for (PedidoArticulo pedidoArticulo : orden.getPedidoArticulos()){
+                for (PedidoArticulo pedidoArticulo : orden.getPedidoArticulo()){
                     if(pedidoArticulo.getArticulo().getId().equals(art_id)) {
                         return true;
                     }
@@ -123,7 +178,7 @@ public class OrdenDeCompraServiceImpl extends BaseServiceImpl<OrdenDeCompra, Lon
         }
         return false;
     }
-*/
+
 
 
     @Override

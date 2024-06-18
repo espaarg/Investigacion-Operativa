@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -36,6 +37,9 @@ public class OrdenDeCompra extends Base{
 
     @ManyToOne(fetch = FetchType.LAZY)
     private ProveedorArticulo proveedorArticulo;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "ordenDeCompra")
+    private List<PedidoArticulo> pedidoArticulo;
 
 
 }

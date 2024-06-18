@@ -30,6 +30,7 @@ public interface ArticuloService extends BaseService<Articulo, Long> {
 
     public double calcularLoteOptimo(Long idArticulo) throws Exception;
 
+    public void darDeBajaArticulo(Articulo articulo) throws Exception;
 
 
 

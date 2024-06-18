@@ -23,6 +23,11 @@ public class ProveedorArticulo extends Base{
     @NotNull
     private double costoPedido;
 
+   /*
+    private String proveedorPredeterminado ="prov 1";
+
+    */
+
     public double getCostoPedido() {
         return costoPedido;
     }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,6 +24,9 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
 
     @Autowired
     private DemandaHistoricaService demandaHistoricaService;
+
+    @Autowired
+    private OrdenDeCompraService ordenDeCompraService;
 
     public ArticuloServiceImpl(BaseRepository<Articulo, Long> baseRepository, ArticuloRepository articuloRepository) {
         super(baseRepository);
@@ -192,6 +196,18 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
         }
     }
 
+    public void darDeBajaArticulo(Articulo articulo) throws Exception {
+        if (ordenDeCompraService.buscarOrdenesActivas(articulo)) {
+            throw new Exception("No se puede dar de baja el artículo porque existen órdenes activas.");
+        }
+
+        try {
+            articulo.setFechaBaja(new Date());
+            articuloRepository.save(articulo);
+        } catch (Exception e) {
+            throw new Exception("Error al dar de baja el artículo: " + e.getMessage(), e);
+        }
+    }
 
 
     /*@Override
