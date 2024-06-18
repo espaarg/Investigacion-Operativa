@@ -61,6 +61,7 @@ public class Articulo extends Base {
     }
 
     public double getCostoAlmacenamiento() { /*no tendria q ser int en vez de double?*/
+
         return costoAlmacenamiento;
     }
 
