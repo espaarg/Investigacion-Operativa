@@ -100,15 +100,19 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
                     .orElseThrow(() -> new Exception("Artículo no encontrado"));
             ProveedorArticulo proveedor = proveedorArticuloRepository.findById(idProveedor)
                     .orElseThrow(() -> new Exception("Proveedor no encontrado"));
+            // Verificar si el modelo de inventario es Lote Fijo
+            if (articulo.getModeloInventario() == ModeloInventario.LoteFijo) {
+                // Obtener la demanda anual desde DemandaHistoricaService
+                int demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
 
-            // Obtener la demanda anual desde DemandaHistoricaService
-            int demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
+                int puntoPedido = demandaAnual * proveedor.getDiasDemora();
+                articulo.setPuntoPedido(puntoPedido);
+                articuloRepository.save(articulo);
 
-            int puntoPedido = demandaAnual * proveedor.getDiasDemora();
-            articulo.setPuntoPedido(puntoPedido);
-            articuloRepository.save(articulo);
-
-            return puntoPedido;
+                return puntoPedido;
+            } else {
+                throw new Exception("El modelo de inventario no es Lote Fijo. No se puede calcular el lote óptimo.");
+            }
         } catch (Exception e) {
             throw new Exception("Error al calcular el punto de pedido: " + e.getMessage());
         }
