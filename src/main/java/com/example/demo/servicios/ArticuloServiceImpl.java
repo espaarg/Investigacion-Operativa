@@ -1,21 +1,18 @@
 package com.example.demo.servicios;
 
 import com.example.demo.entidades.Articulo;
-import com.example.demo.entidades.DemandaHistorica;
 import com.example.demo.entidades.ProveedorArticulo;
 import com.example.demo.enums.ModeloInventario;
 import com.example.demo.repositorios.ArticuloRepository;
 import com.example.demo.repositorios.BaseRepository;
-import com.example.demo.repositorios.DemandaHistoricaRepository;
-import com.example.demo.repositorios.ProveedorArticuloRepository;
 import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 
@@ -42,9 +39,7 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
         }
     }
 
-    public void calcularCGI() throws Exception{
 
-    }
 
     @Override
     public double calcularLoteOptimo(Long idArticulo) throws Exception {
@@ -66,6 +61,32 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
             throw new Exception(e.getMessage());
         }
     }
+
+    @Override
+    public double calcularCGI() throws Exception {
+        return 0;
+    }
+    /*@Override
+    public double calcularCGI(int stockActual, float precioCompra) throws Exception {
+        if (stockActual <= 0 || precioCompra <= 0) {
+            throw new IllegalArgumentException("Stock actual y precio de compra deben ser mayores que cero");
+        }
+        return precioCompra * stockActual;
+    }
+    @Override
+    public List<Double> calcularCGIDeTodosArticulos() throws Exception {
+        List<Articulo> articulos = articuloRepository.traerTodosArticulos();
+        List<Double> cgis = new ArrayList<>();
+
+        for (Articulo articulo : articulos) {
+            double cgi = calcularCGI(articulo.getStockActual(), articulo.getPrecioCompra());
+            cgis.add(cgi);
+        }
+
+        return cgis;
+    }*/
+
+
 
     /*public int calcularStockSeguridad(int puntoPedido, int demoraProveedor) {
         demoraProveedor = ProveedorArticulo.getDiasDemora();
@@ -161,7 +182,22 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
             throw new Exception(e.getMessage());
         }
     }
+    @Override
+    @Transactional(readOnly = true)
+    public List<Articulo> traerArticulosFaltantes(int stockDeSeguridad, int stockActual) throws Exception {
+        try {List<Articulo> articulo = articuloRepository.traerArticulosFaltantes(stockDeSeguridad, stockActual);
+            return articulo;
+        } catch (Exception e) {
+            throw new Exception("Error al traer los artículos faltantes: " + e.getMessage());
+        }
+    }
 
+
+
+    /*@Override
+    public double calcularCGI() throws Exception {
+        return articuloRepository.calcularCGIDeTodosArticulos();
+    }*/
 
     @Override
     public Page findAllPageable(Pageable pageable) throws Exception {

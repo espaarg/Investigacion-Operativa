@@ -1,10 +1,14 @@
 package com.example.demo.controladores;
 
 import com.example.demo.entidades.Articulo;
+import com.example.demo.servicios.ArticuloService;
 import com.example.demo.servicios.ArticuloServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins =  "*")
@@ -20,23 +24,6 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }
     }
-
- /*   @PostMapping("/create")
-    public ResponseEntity<?> crearArticulo(@RequestParam String nombre,
-                                                   @RequestParam float precioCompra,
-                                                   @RequestParam int stockActual,
-                                           @RequestParam int loteOptimo,
-                                           @RequestParam float cgiArticulo,
-                                           @RequestParam int puntoPedido,
-                                           @RequestParam int stockDeSeguridad
-                                           ) {
-        try {
-            demandaHistoricaService.crearDemandaHistorica(idArticulo, fechaDesde, fechaHasta);
-            return ResponseEntity.status(HttpStatus.CREATED).body("DemandaHistorica creada");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
-        }
-    }*/
 
     @GetMapping("/oneNombre")
     public ResponseEntity<?> traerUnArticuloNombre(String nombre){
@@ -65,16 +52,25 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }
     }
+    @GetMapping("/articulosFaltantes")
+    public ResponseEntity<?> identificarArticulosFaltantes(int stockDeSeguridad, int stockActual) {
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerArticulosFaltantes(stockDeSeguridad, stockActual));
 
-    @GetMapping("/calcularLoteOptimo")
-    public ResponseEntity<?> calcularLoteOptimo(@RequestParam Long idArticulo) {
-        try {
-            double loteOptimo = servicio.calcularLoteOptimo(idArticulo);
-            return ResponseEntity.status(HttpStatus.OK).body("{\"loteOptimo\": " + loteOptimo + "}");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }
     }
+
+   /* @GetMapping("/calcularCGI")
+    public ResponseEntity<?> calcularCGI(int stockActual, float precioCompra) {
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.calcularCGI(stockActual, precioCompra));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }*/
 
 
     /*
