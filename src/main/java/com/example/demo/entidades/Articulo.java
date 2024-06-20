@@ -39,6 +39,15 @@ public class Articulo extends Base {
     private int stockDeSeguridad;
 
     @NotNull
+    private int tiempoEntrePedidos;
+
+    @NotNull
+    private int cantMax;
+
+    @NotNull
+    private int cantAPedir;
+
+    @NotNull
     @Temporal(TemporalType.DATE)
     private Date fechaAlta;
 
@@ -52,22 +61,5 @@ public class Articulo extends Base {
     private ProveedorArticulo proveedorArticulo;
 
 
-    public ModeloInventario getModeloInventario() {
-        return modeloInventario;
-    }
-
-    public ProveedorArticulo getProveedorArticulo() {
-        return proveedorArticulo;
-    }
-
-    public double getCostoAlmacenamiento() { /*no tendria q ser int en vez de double?*/
-
-        return costoAlmacenamiento;
-    }
-
-
-    public void setLoteOptimo(int loteOptimo) {
-        this.loteOptimo = loteOptimo;
-    }
 
 }

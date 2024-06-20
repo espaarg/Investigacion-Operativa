@@ -18,7 +18,7 @@ public class ProveedorArticulo extends Base{
     private String nombreProveedor;
 
     @NotNull
-    private final int diasDemora = 8;
+    private int diasDemora;
 
     @NotNull
     private double costoPedido;

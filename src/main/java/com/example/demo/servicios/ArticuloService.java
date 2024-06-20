@@ -9,14 +9,9 @@ import java.util.List;
 public interface ArticuloService extends BaseService<Articulo, Long> {
 
     List<Articulo> traerTodosArticulos() throws Exception;
-
-    double calcularCGI() throws Exception;
     List<Articulo> traerUnArticuloNombre(String nombre) throws Exception;
     Articulo traerUnArticuloId(Long id) throws Exception;
     List<Articulo> traerArticuloBajoStock(int stockDeSeguridad, int stockActual) throws Exception;
-
-    /*double calcularCGI(int stockActual, float precioCompra) throws Exception;
-    List<Double> calcularCGIDeTodosArticulos() throws Exception;*/
 
     @Transactional(readOnly = true)
     List<Articulo> traerArticulosFaltantes(int stockDeSeguridad, int stockActual) throws Exception;
@@ -36,10 +31,20 @@ public interface ArticuloService extends BaseService<Articulo, Long> {
 
     public void darDeBajaArticulo(Articulo articulo) throws Exception;
 
+    int calcularStockDeSeguridad(Long idArticulo) throws Exception;
+
+    int calcularCantidadMaxima(Long idArticulo) throws Exception;
+
+    int calcularCantidadAPedir(Long idArticulo) throws Exception;
+
+    float calcularCGI(Long idArticulo) throws Exception;
+
+    public void calculoLoteFijo(Long idArticulo, Long idProveedor, Long idMultiplicador) throws Exception;
+
+    public void calculoIntervaloFijo(Long idArticulo) throws Exception;
 
 
 
-    /*public double calcularStockDeSeguridad() throws Exception;*/
 
 }
 

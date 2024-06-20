@@ -20,7 +20,7 @@ import java.util.List;
 
 @Service
 
-public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> implements ArticuloService{
+public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> implements ArticuloService {
 
     @Autowired
     private ArticuloRepository articuloRepository;
@@ -47,12 +47,26 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
         try {
             List<Articulo> articulos = articuloRepository.traerTodosArticulos();
             return articulos;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
+    @Override
+    public void calculoLoteFijo(Long idArticulo, Long idProveedor, Long idMultiplicador) throws Exception {
+        calcularCGI(idArticulo); //nose q le pasa q a veces me da y en otra me dice q no puede dividir por 0 paraa si el lote no cero hdp
+        calcularLoteOptimo(idArticulo); //da bien
+        calcularCostoAlmacenamiento(idArticulo, idMultiplicador); //me da el valor pero la coma está mal ubicada quizas por el tipo de dato pero raaro
+        calcularPuntoPedido(idArticulo, idProveedor); //da bien
+        calcularStockDeSeguridad(idArticulo); //da bien
+    }
 
+    @Override
+    public void calculoIntervaloFijo(Long idArticulo) throws Exception {//este anda bien enterito
+        calcularCantidadMaxima(idArticulo);
+        calcularCantidadAPedir(idArticulo);
+        calcularStockDeSeguridad(idArticulo);
+    }
 
     @Override
     public double calcularLoteOptimo(Long idArticulo) throws Exception {
@@ -67,6 +81,32 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
                 articulo.setLoteOptimo((int) eoq);
                 articuloRepository.save(articulo);
                 return eoq;
+            } else {
+                throw new Exception("El modelo de inventario no es Lote Fijo. No se puede calcular el lote óptimo.");
+            }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public float calcularCGI(Long idArticulo) throws Exception {
+        try {
+            Articulo articulo = articuloRepository.findById(idArticulo)
+                    .orElseThrow(() -> new Exception("Artículo no encontrado con id: " + idArticulo));
+            ProveedorArticulo proveedorArticulo = articulo.getProveedorArticulo();
+            float precio = articulo.getPrecioCompra();
+            int demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
+            float costoAlmacenamiento = articulo.getCostoAlmacenamiento();
+            int loteOptimo = articulo.getLoteOptimo();
+            double costoPedido = proveedorArticulo.getCostoPedido();
+            float cgi = 0;
+            // Verificar si el modelo de inventario es Lote Fijo
+            if (articulo.getModeloInventario() == ModeloInventario.LoteFijo) {
+                cgi = (float) ((precio * demandaAnual) + (costoAlmacenamiento * (loteOptimo / 2)) + (costoPedido * (demandaAnual / loteOptimo)));
+                articulo.setCgiArticulo(cgi);
+                articuloRepository.save(articulo);
+                return cgi;
             } else {
                 throw new Exception("El modelo de inventario no es Lote Fijo. No se puede calcular el lote óptimo.");
             }
@@ -104,8 +144,8 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
             if (articulo.getModeloInventario() == ModeloInventario.LoteFijo) {
                 // Obtener la demanda anual desde DemandaHistoricaService
                 int demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
-
-                int puntoPedido = demandaAnual * proveedor.getDiasDemora();
+                double demandaDiaria = demandaAnual/365; //consideramos que trabajamos 365 dias al año
+                int puntoPedido = (int) demandaDiaria * proveedor.getDiasDemora();
                 articulo.setPuntoPedido(puntoPedido);
                 articuloRepository.save(articulo);
 
@@ -119,9 +159,71 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
     }
 
     @Override
-    public double calcularCGI() throws Exception {
-        return 0;
+    public int calcularStockDeSeguridad(Long idArticulo) throws Exception {
+        Articulo articulo = articuloRepository.findById(idArticulo)
+                .orElseThrow(() -> new Exception("Artículo no encontrado"));
+        ProveedorArticulo proveedorArticulo = proveedorArticuloRepository.findById(articulo.getProveedorArticulo().getId())
+                .orElseThrow(() -> new Exception("Proveedor no encontrado"));
+        //definimos un z=1,67
+        double Z = 1.67;
+        double desvEstandarD = 1.0; //el profe dijo que a la desviacion estandar de la demanda sea 1
+        int diasDemora = proveedorArticulo.getDiasDemora();
+        int tiempoEntrePedidos = articulo.getTiempoEntrePedidos();
+        int stockSeguridad = 0;
+        if (articulo.getModeloInventario() == ModeloInventario.LoteFijo) {
+            stockSeguridad= (int) (Z * desvEstandarD * Math.sqrt(diasDemora));
+            articulo.setStockDeSeguridad(stockSeguridad);
+        } else if (articulo.getModeloInventario() == ModeloInventario.IntervaloFijo) {
+            stockSeguridad=(int) (Z * desvEstandarD * Math.sqrt(tiempoEntrePedidos + diasDemora));
+            articulo.setStockDeSeguridad(stockSeguridad);
+        }
+        articuloRepository.save(articulo);
+        return stockSeguridad;
     }
+
+    @Override
+    public int calcularCantidadMaxima(Long idArticulo) throws Exception {
+        Articulo articulo = articuloRepository.findById(idArticulo)
+                .orElseThrow(() -> new Exception("Artículo no encontrado"));
+        ProveedorArticulo proveedorArticulo = proveedorArticuloRepository.findById(articulo.getProveedorArticulo().getId())
+                .orElseThrow(() -> new Exception("Proveedor no encontrado"));
+        int diasDemora = proveedorArticulo.getDiasDemora();
+        int tiempoEntrePedidos = articulo.getTiempoEntrePedidos();
+        // Obtener la demanda anual desde DemandaHistoricaService
+        int demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
+        int ss = articulo.getStockDeSeguridad();
+        int cantMax = 0;
+        float demandaDiaria = (float) demandaAnual /365; //consideramos que trabajamos 365 dias al año
+        if (articulo.getModeloInventario() == ModeloInventario.IntervaloFijo) {
+            cantMax = (int) (demandaDiaria * (tiempoEntrePedidos+diasDemora) + ss); //me da 2 numeritos menos de lo me debería dar
+            //antes el tipo de dato de demanda diaria era double y eran como 11 numeritos menos pero nose q tipo de dato ponerle para q se acerque más :(
+            articulo.setCantMax(cantMax);
+        } else {
+            throw new Exception("El modelo de inventario no es Intervalo Fijo. No se puede calcular la cantidad máxima.");
+        }
+        articuloRepository.save(articulo);
+        return cantMax;
+
+    }
+
+    @Override
+    public int calcularCantidadAPedir(Long idArticulo) throws Exception {
+        Articulo articulo = articuloRepository.findById(idArticulo)
+                .orElseThrow(() -> new Exception("Artículo no encontrado"));
+        int inventario = articulo.getStockActual();
+        int cantMax = articulo.getCantMax();
+        int cantAPedir = 0;
+        if (articulo.getModeloInventario() == ModeloInventario.IntervaloFijo) {
+            cantAPedir = (cantMax-inventario);
+            articulo.setCantAPedir(cantAPedir);
+        } else {
+            throw new Exception("El modelo de inventario no es Intervalo Fijo. No se puede calcular la cantidad a pedir.");
+        }
+        articuloRepository.save(articulo);
+        return cantAPedir;
+    }
+
+
     /*@Override
     public double calcularCGI(int stockActual, float precioCompra) throws Exception {
         if (stockActual <= 0 || precioCompra <= 0) {

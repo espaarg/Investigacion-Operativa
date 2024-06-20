@@ -106,6 +106,78 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
         }
     }
 
+    @GetMapping("/calcularStockDeSeguridad")
+    public ResponseEntity<?> calcularStockDeSeguridad(@RequestParam Long idArticulo) {
+        try {
+            int stockDeSeguridad = servicio.calcularStockDeSeguridad(idArticulo);
+            return ResponseEntity.status(HttpStatus.OK).body("{\"mensaje\": \"Stock de seguridad calculado correctamente\": "+ stockDeSeguridad + "}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    @GetMapping("/calcularCantidadMaxima")
+    public ResponseEntity<?> calcularCantidadMaxima(@RequestParam Long idArticulo) {
+        try {
+            int cantMax = servicio.calcularCantidadMaxima(idArticulo);
+            return ResponseEntity.status(HttpStatus.OK).body("{\"mensaje\": \"Cantidad máxima calculada correctamente\"}: "+ cantMax+"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    @GetMapping("/calcularCantidadAPedir")
+    public ResponseEntity<?> calcularCantidadAPedir(@RequestParam Long idArticulo) {
+        try {
+            int cantAPedir = servicio.calcularCantidadAPedir(idArticulo);
+            return ResponseEntity.status(HttpStatus.OK).body("{\"mensaje\": \"Cantidad a pedir calculada correctamente\"}: "+ cantAPedir+"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    @GetMapping("/calcularCGI")
+    public ResponseEntity<?> calcularCGI(@RequestParam Long idArticulo) {
+        try {
+            float cgi = servicio.calcularCGI(idArticulo);
+            return ResponseEntity.status(HttpStatus.OK).body("{\"mensaje\": \"CGI calculado correctamente\"}: "+ cgi+"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    @GetMapping("/calculoLoteFijo")
+    public ResponseEntity<?> calculoLoteFijo(@RequestParam Long idArticulo, @RequestParam Long idProveedor, @RequestParam Long idMultiplicador) {
+        try {
+            double loteOptimo = articuloService.calcularLoteOptimo(idArticulo);
+            float costoAlmacenamiento = articuloService.calcularCostoAlmacenamiento(idArticulo, idMultiplicador);
+            int puntoPedido = articuloService.calcularPuntoPedido(idArticulo, idProveedor);
+            int stockDeSeguridad = articuloService.calcularStockDeSeguridad(idArticulo);
+            float cgi = articuloService.calcularCGI(idArticulo);
+
+            return ResponseEntity.status(HttpStatus.OK).body(String.format(
+                    "{\"loteOptimo\": %f, \"costoAlmacenamiento\": %f, \"puntoPedido\": %d, \"stockDeSeguridad\": %d, \"cgi\": %f}",
+                    loteOptimo, costoAlmacenamiento, puntoPedido, stockDeSeguridad, cgi));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    @GetMapping("/calculoIntervaloFijo")
+    public ResponseEntity<?> calculoIntervaloFijo(@RequestParam Long idArticulo) {
+        try {
+            int cantidadMaxima = articuloService.calcularCantidadMaxima(idArticulo);
+            int cantidadAPedir = articuloService.calcularCantidadAPedir(idArticulo);
+            int stockDeSeguridad = articuloService.calcularStockDeSeguridad(idArticulo);
+
+            return ResponseEntity.status(HttpStatus.OK).body(String.format(
+                    "{\"cantidadMaxima\": %d, \"cantidadAPedir\": %d, \"stockDeSeguridad\": %d}",
+                    cantidadMaxima, cantidadAPedir, stockDeSeguridad));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
    /* @GetMapping("/calcularCGI")
     public ResponseEntity<?> calcularCGI(int stockActual, float precioCompra) {
         try{
