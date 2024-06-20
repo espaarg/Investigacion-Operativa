@@ -67,75 +67,59 @@ public class OrdenDeCompraServiceImpl extends BaseServiceImpl<OrdenDeCompra, Lon
         int cantidadArticulos = 0;
         float sumaTotal = 0;
         ordenDeCompra.setFechaPedido(date1);
-        ordenDeCompra =  ordenDeCompraRepository.save(ordenDeCompra);
-        long idOrden = ordenDeCompra.getId();
-        for (PedidoArticuloDTO pedido: pedidoArticulos){
-            int cant = pedido.getCantidad();
+
+        ordenDeCompra = ordenDeCompraRepository.save(ordenDeCompra);
+
+        for (PedidoArticuloDTO pedido : pedidoArticulos) {
             long idArt = pedido.getIdArticulo();
             Articulo art = articuloRepository.getReferenceById(idArt);
-            cantidadArticulos=cantidadArticulos+cant;
-            sumaTotal=sumaTotal+art.getPrecioCompra();
-            pedidoArticuloServiceImpl.crearPedidoArticulo(cant,idArt,idOrden);
-            ordenDeCompra.setProveedorArticulo(proveedorArticuloRepository.getReferenceById(pedido.getIdProveedor()));
+
+            // Verificar si hay órdenes activas para el artículo
+            if (buscarOrdenesActivas(art)) {
+                throw new Exception("Ya existe una orden activa para el artículo con ID: " + idArt);
+            }
+
+            // Sugerir proveedor y tamaño de lote
+            ProveedorArticulo proveedorPredeterminado = art.getProveedorArticulo();
+            int tamanoLotePredeterminado = art.getLoteOptimo();
+
+            // Usar valores del DTO si están presentes, sino usar valores predeterminados
+            Integer cantidad = (pedido.getCantidad() != null) ? pedido.getCantidad() : tamanoLotePredeterminado;
+            //long idProveedor = (pedido.getIdProveedor() != null) ? pedido.getIdProveedor() : proveedorPredeterminado.getId();
+
+            PedidoArticulo nuevoPedidoArticulo = new PedidoArticulo();
+            nuevoPedidoArticulo.setArticulo(art);
+            nuevoPedidoArticulo.setCantidad(cantidad);
+            //nuevoPedidoArticulo.setProveedorArticulo(proveedorArticulo); //no tenemos el pedido articulo relacionado a un proveedor
+            nuevoPedidoArticulo.setOrdenDeCompra(ordenDeCompra);
+
+            cantidadArticulos += cantidad;
+            sumaTotal += art.getPrecioCompra() * cantidad;
+
+            // Guardar el pedidoArticulo
+            pedidoArticuloRepository.save(nuevoPedidoArticulo);
+
+            // Actualizar el stock del artículo
+            art.setStockActual(art.getStockActual() + cantidad);
+            articuloRepository.save(art);
+
+            // Añadir el pedidoArticulo a la orden de compra
+            ordenDeCompra.getPedidoArticulo().add(nuevoPedidoArticulo);
         }
+
         ordenDeCompra.setTotalArticulos(cantidadArticulos);
         ordenDeCompra.setTotalCompra(sumaTotal);
+
+        // Guardar la orden de compra
         ordenDeCompraRepository.save(ordenDeCompra);
     }
 
 
-    /*
-@Override
-public void crearOrdenDeCompra(List<PedidoArticuloDTO> pedidoArticulos) throws Exception {
-    ProveedorArticulo proveedorPredeterminado = ;
-    int tamanoLotePredeterminado = 15;
-
-    OrdenDeCompra ordenDeCompra = new OrdenDeCompra();
-    ordenDeCompra.setEstadoOrdenDeCompra(EstadoOrdenDeCompra.Pendiente);
-
-    LocalDate fechaPedido = LocalDate.now();
-    ordenDeCompra.setFechaPedido(java.sql.Date.valueOf(fechaPedido));
-
-    int cantidadArticulos = 0;
-    float sumaTotal = 0;
-
-    List<PedidoArticulo> pedidos = new ArrayList<>();
-
-    for (PedidoArticuloDTO pedido : pedidoArticulos) {
-        Articulo articulo = articuloRepository.findById(pedido.getIdArticulo())
-                .orElseThrow(() -> new Exception("Artículo no encontrado"));
-
-        // Verificar si hay órdenes activas para este artículo
-        if (buscarOrdenesActivas(articulo)) {
-            throw new Exception("No se puede crear la orden de compra. Existe una orden activa para el artículo.");
-        }
-
-        // Crear el pedido de artículo
-        PedidoArticulo pedidoArticulo = PedidoArticulo.builder()
-                .cantidad(pedido.getCantidad())
-                .articulo(articulo)
-                .ordenDeCompra(ordenDeCompra)
-                .build();
-
-        pedidos.add(pedidoArticulo);
-
-        cantidadArticulos += pedido.getCantidad();
-        sumaTotal += articulo.getPrecioCompra();
-    }
 
 
-    // Establecer proveedor y pedidos en la orden de compra
-    ordenDeCompra.setProveedorArticulo();
-    ordenDeCompra.setPedidoArticulo(pedidos);
 
-    // Establecer total de artículos y total de compra
-    ordenDeCompra.setTotalArticulos(cantidadArticulos);
-    ordenDeCompra.setTotalCompra(sumaTotal);
 
-    ordenDeCompraRepository.save(ordenDeCompra);
-}
 
-     */
 
     @Override
     public List<OrdenDeCompraDTO> traerTodasOrdenes() throws Exception {

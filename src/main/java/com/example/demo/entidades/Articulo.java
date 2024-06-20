@@ -61,5 +61,4 @@ public class Articulo extends Base {
     private ProveedorArticulo proveedorArticulo;
 
 
-
 }

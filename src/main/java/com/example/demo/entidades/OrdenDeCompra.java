@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class OrdenDeCompra extends Base{
     private ProveedorArticulo proveedorArticulo;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "ordenDeCompra")
-    private List<PedidoArticulo> pedidoArticulo;
+    private List<PedidoArticulo> pedidoArticulo = new ArrayList<>();
 
 
 }

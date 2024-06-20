@@ -18,7 +18,7 @@ import java.util.Date;
 public class PedidoArticulo extends Base{
 
     @NotNull
-    private int cantidad;
+    private Integer cantidad;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)

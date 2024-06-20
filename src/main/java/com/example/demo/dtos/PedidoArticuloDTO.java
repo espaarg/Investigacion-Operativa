@@ -1,15 +1,15 @@
 package com.example.demo.dtos;
 
 public class PedidoArticuloDTO {
-    private int cantidad;
+    private Integer cantidad;
     private long idArticulo;
     private long idProveedor;
 
-    public int getCantidad() {
+    public Integer getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
 
@@ -21,11 +21,18 @@ public class PedidoArticuloDTO {
         this.idArticulo = idArticulo;
     }
 
+    public PedidoArticuloDTO(int cantidad, long idArticulo) {
+        this.cantidad = cantidad;
+        this.idArticulo = idArticulo;
+    }
+
+    /*
     public PedidoArticuloDTO(int cantidad, long idArticulo, long idProveedor) {
         this.cantidad = cantidad;
         this.idArticulo = idArticulo;
         this.idProveedor = idProveedor;
     }
+     */
 
     public long getIdProveedor() {
         return idProveedor;
