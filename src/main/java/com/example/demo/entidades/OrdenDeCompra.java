@@ -43,6 +43,7 @@ public class OrdenDeCompra extends Base{
     private ProveedorArticulo proveedorPredeterminado;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "ordenDeCompra")
+    @Builder.Default
     private List<PedidoArticulo> pedidoArticulo = new ArrayList<>();
 
 
