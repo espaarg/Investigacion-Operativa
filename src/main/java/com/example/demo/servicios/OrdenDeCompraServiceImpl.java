@@ -107,6 +107,8 @@ public class OrdenDeCompraServiceImpl extends BaseServiceImpl<OrdenDeCompra, Lon
             ordenDeCompra.getPedidoArticulo().add(nuevoPedidoArticulo);
         }
 
+        ProveedorArticulo proveedorPredeterminadoOrden = ordenDeCompra.getProveedorPredeterminado();
+        ordenDeCompra.setProveedorArticulo(proveedorPredeterminadoOrden);
         ordenDeCompra.setTotalArticulos(cantidadArticulos);
         ordenDeCompra.setTotalCompra(sumaTotal);
 
