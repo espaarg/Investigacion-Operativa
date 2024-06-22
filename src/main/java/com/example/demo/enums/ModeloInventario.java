@@ -2,9 +2,9 @@ package com.example.demo.enums;
 
 public enum ModeloInventario {
 
-    LoteFijo,
+    LOTEFIJO,
 
-    IntervaloFijo;
+    INTERVALOFIJO;
 
     public static String getModeloInventario() {
         return null;
