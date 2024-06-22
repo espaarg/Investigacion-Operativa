@@ -1,6 +1,5 @@
 package com.example.demo.entidades;
 
-import com.example.demo.enums.EstadoVenta;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,10 +24,6 @@ public class Venta extends Base{
         @NotNull
         @Temporal(TemporalType.DATE)
         private Date fechaVenta;
-
-        @NotNull
-        @Enumerated(EnumType.STRING)
-        private EstadoVenta estadoVenta;
 
         @NotNull
         @OneToMany(mappedBy = "venta", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

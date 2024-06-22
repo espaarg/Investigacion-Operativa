@@ -209,6 +209,7 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
         }
     }
 
+    /*
     @GetMapping("/articulosParaReorden")
     public ResponseEntity<?> obtenerArticulosParaReorden() {
         try {
@@ -218,6 +219,8 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+
+     */
 
 
    /* @GetMapping("/calcularCGI")
