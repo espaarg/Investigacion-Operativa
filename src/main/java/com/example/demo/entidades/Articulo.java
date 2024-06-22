@@ -31,7 +31,7 @@ public class Articulo extends Base {
 
     private int loteOptimo;
 
-    private float cgiArticulo;
+    private double cgiArticulo;
 
     private int puntoPedido;
 

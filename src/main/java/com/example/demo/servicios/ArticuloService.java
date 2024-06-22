@@ -35,7 +35,7 @@ public interface ArticuloService extends BaseService<Articulo, Long> {
 
     int calcularCantidadAPedir(Long idArticulo) throws Exception;
 
-    float calcularCGI(Long idArticulo) throws Exception;
+    double calcularCGI(Long idArticulo) throws Exception;
 
     public void calculoLoteFijo(Long idArticulo, Long idProveedor, Long idMultiplicador) throws Exception;
 

@@ -186,7 +186,7 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
             if (articulo.getModeloInventario() == ModeloInventario.LOTEFIJO) {
                 double demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
                 double eoq = Math.sqrt((2 * proveedorArticulo.getCostoPedido() * demandaAnual) / articulo.getCostoAlmacenamiento());
-                articulo.setLoteOptimo((int) eoq);
+                articulo.setLoteOptimo((int)eoq);
                 articuloRepository.save(articulo);
                 return eoq;
             } else {
@@ -198,7 +198,7 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
     }
 
     @Override
-    public float calcularCGI(Long idArticulo) throws Exception {
+    public double calcularCGI(Long idArticulo) throws Exception {
         try {
             Articulo articulo = articuloRepository.findById(idArticulo)
                     .orElseThrow(() -> new Exception("Artículo no encontrado con id: " + idArticulo));
@@ -208,15 +208,15 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
             float costoAlmacenamiento = articulo.getCostoAlmacenamiento();
             int loteOptimo = articulo.getLoteOptimo();
             double costoPedido = proveedorArticulo.getCostoPedido();
-            float cgi = 0;
+            double cgi = 0;
             // Verificar si el modelo de inventario es Lote Fijo
             if (articulo.getModeloInventario() == ModeloInventario.LOTEFIJO) {
-                cgi = (float) ((precio * demandaAnual) + (costoAlmacenamiento * (loteOptimo / 2)) + (costoPedido * (demandaAnual / loteOptimo)));
+                cgi = (double) ((precio * demandaAnual) + (costoAlmacenamiento * (loteOptimo / 2)) + (costoPedido * (demandaAnual / loteOptimo)));
                 articulo.setCgiArticulo(cgi);
                 articuloRepository.save(articulo);
                 return cgi;
             } else {
-                throw new Exception("El modelo de inventario no es Lote Fijo. No se puede calcular el lote óptimo.");
+                throw new Exception("El modelo de inventario no es Lote Fijo. No se puede calcular el cgi.");
             }
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -259,7 +259,7 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
 
                 return puntoPedido;
             } else {
-                throw new Exception("El modelo de inventario no es Lote Fijo. No se puede calcular el lote óptimo.");
+                throw new Exception("El modelo de inventario no es Lote Fijo. No se puede calcular el punto de pedido.");
             }
         } catch (Exception e) {
             throw new Exception("Error al calcular el punto de pedido: " + e.getMessage());

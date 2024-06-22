@@ -78,7 +78,7 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
     public ResponseEntity<?> calcularLoteOptimo(@RequestParam Long idArticulo) {
         try {
             double loteOptimo = servicio.calcularLoteOptimo(idArticulo);
-            return ResponseEntity.status(HttpStatus.OK).body("{\"loteOptimo\": " + loteOptimo + "}");
+            return ResponseEntity.status(HttpStatus.OK).body("{\"loteOptimo\": " + (int)loteOptimo + "}");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
@@ -137,7 +137,7 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
     @GetMapping("/calcularCGI")
     public ResponseEntity<?> calcularCGI(@RequestParam Long idArticulo) {
         try {
-            float cgi = servicio.calcularCGI(idArticulo);
+            double cgi = servicio.calcularCGI(idArticulo);
             return ResponseEntity.status(HttpStatus.OK).body("{\"mensaje\": \"CGI calculado correctamente\"}: "+ cgi+"}");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
@@ -151,11 +151,11 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
             float costoAlmacenamiento = articuloService.calcularCostoAlmacenamiento(idArticulo, idMultiplicador);
             int puntoPedido = articuloService.calcularPuntoPedido(idArticulo, idProveedor);
             int stockDeSeguridad = articuloService.calcularStockDeSeguridad(idArticulo);
-            float cgi = articuloService.calcularCGI(idArticulo);
+            double cgi = articuloService.calcularCGI(idArticulo);
 
             return ResponseEntity.status(HttpStatus.OK).body(String.format(
                     "{\"loteOptimo\": %f, \"costoAlmacenamiento\": %f, \"puntoPedido\": %d, \"stockDeSeguridad\": %d, \"cgi\": %f}",
-                    loteOptimo, costoAlmacenamiento, puntoPedido, stockDeSeguridad, cgi));
+                    (int)loteOptimo, costoAlmacenamiento, puntoPedido, stockDeSeguridad, cgi));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
