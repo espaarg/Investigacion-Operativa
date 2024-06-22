@@ -1,5 +1,6 @@
 package com.example.demo.servicios;
 
+import com.example.demo.dtos.ArticuloDTO;
 import com.example.demo.entidades.Articulo;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 public interface ArticuloService extends BaseService<Articulo, Long> {
 
-    List<Articulo> traerTodosArticulos() throws Exception;
+    List<ArticuloDTO> traerTodosArticulos() throws Exception;
     List<Articulo> traerUnArticuloNombre(String nombre) throws Exception;
     Articulo traerUnArticuloId(Long id) throws Exception;
     List<Articulo> traerArticuloBajoStock(int stockDeSeguridad, int stockActual) throws Exception;
@@ -16,12 +17,9 @@ public interface ArticuloService extends BaseService<Articulo, Long> {
     @Transactional(readOnly = true)
     List<Articulo> traerArticulosFaltantes(int stockDeSeguridad, int stockActual) throws Exception;
 
-/*    List<ControlStockDTO> controlStockInsuficiente() throws Exception;
+    void crearArticulo(String nombre, long precioCompra, int stockDeSeguridad, int stockActual, int loteOptimo, int cantMax, String modeloInventario, String proveedorArticulo, Float cgiArticulo, int cantAPedir, int puntoPedido, int tiempoEntrePedidos) throws Exception;
 
-            List<ControlStockDTO> controlStockBajo() throws Exception;*/
-/*
-    Page<Articulo> search(String denominacion, Number min, Number max, Number stockMenor, Number minStock, Number maxStock, Pageable pageable) throws Exception;
-*/
+    void actualizarArticulo(Long id, String nombre, Float precioCompra, Integer stockDeSeguridad, Integer stockActual, Integer loteOptimo, Integer cantMax, String modeloInventario, String proveedorArticulo, Float cgiArticulo, Integer cantAPedir, Integer puntoPedido, Integer tiempoEntrePedidos) throws Exception;
 
     public double calcularLoteOptimo(Long idArticulo) throws Exception;
 
@@ -43,7 +41,12 @@ public interface ArticuloService extends BaseService<Articulo, Long> {
 
     public void calculoIntervaloFijo(Long idArticulo) throws Exception;
 
-    public List<Articulo> obtenerArticulosParaReorden() throws Exception;
+/*    List<ControlStockDTO> controlStockInsuficiente() throws Exception;
+
+            List<ControlStockDTO> controlStockBajo() throws Exception;*/
+/*
+    Page<Articulo> search(String denominacion, Number min, Number max, Number stockMenor, Number minStock, Number maxStock, Pageable pageable) throws Exception;
+*/
 
 
 }

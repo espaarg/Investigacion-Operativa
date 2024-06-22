@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @CrossOrigin(origins =  "*")
 @RequestMapping(path = "/Articulo")
@@ -175,6 +173,39 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
                     cantidadMaxima, cantidadAPedir, stockDeSeguridad));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+    @PostMapping("/create")
+    public ResponseEntity<?> crearArticulo(@RequestParam String nombre, @RequestParam Long precioCompra, @RequestParam int stockActual, int stockDeSeguridad, int loteOptimo, int cantMax, @RequestParam String modeloInventario, @RequestParam String proveedorArticulo, Float cgiArticulo, int cantAPedir, int puntoPedido, int tiempoEntrePedidos){
+        try{
+            servicio.crearArticulo(nombre,precioCompra,stockDeSeguridad,stockActual,loteOptimo,cantMax,modeloInventario,proveedorArticulo,cgiArticulo,cantAPedir, puntoPedido, tiempoEntrePedidos);
+            return ResponseEntity.status(HttpStatus.OK).body("Listo");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }
+
+    @PutMapping("/actualizar")
+    public ResponseEntity<?> actualizarArticulo(@RequestParam Long id,
+                                                @RequestParam(required = false) String nombre,
+                                                @RequestParam(required = false) Float precioCompra,
+                                                @RequestParam(required = false) Integer stockActual,
+                                                @RequestParam(required = false) Integer stockDeSeguridad,
+                                                @RequestParam(required = false) Integer loteOptimo,
+                                                @RequestParam(required = false) Integer cantMax,
+                                                @RequestParam(required = false) String modeloInventario,
+                                                @RequestParam(required = false) String proveedorArticulo,
+                                                @RequestParam(required = false) Float cgiArticulo,
+                                                @RequestParam(required = false) Integer cantAPedir,
+                                                @RequestParam(required = false) Integer puntoPedido,
+                                                @RequestParam(required = false) Integer tiempoEntrePedidos){
+        try{
+            servicio.actualizarArticulo(id,nombre,precioCompra,stockDeSeguridad,stockActual,loteOptimo,cantMax,modeloInventario,proveedorArticulo,cgiArticulo,cantAPedir, puntoPedido, tiempoEntrePedidos);
+            return ResponseEntity.status(HttpStatus.OK).body("Listo");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }
     }
 

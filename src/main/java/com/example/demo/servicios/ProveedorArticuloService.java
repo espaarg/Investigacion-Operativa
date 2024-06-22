@@ -12,4 +12,5 @@ public interface ProveedorArticuloService extends BaseService<ProveedorArticulo,
     List<ProveedorArticulo> traerTodosProveedores() throws Exception;
     List<ProveedorArticulo> search(String codigo) throws Exception;
     Page<ProveedorArticulo> search(String codigo, Pageable pageable) throws Exception;
+    ProveedorArticulo traerProveedorPorNombre(String nombre);
 }

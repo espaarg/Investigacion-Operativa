@@ -1,9 +1,9 @@
 package com.example.demo.enums;
 
 public enum EstadoVenta {
-    Aceptada,
-    Pendiente_de_Pago,
-    Pagada,
-    Entregada,
-    Cancelada
+    ACEPTADA,
+    PENDIENTE_DE_PAGO,
+    PAGADA,
+    ENTREGADA,
+    CANCELADA
 }

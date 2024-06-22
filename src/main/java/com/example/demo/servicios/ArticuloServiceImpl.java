@@ -1,5 +1,6 @@
 package com.example.demo.servicios;
 
+import com.example.demo.dtos.ArticuloDTO;
 import com.example.demo.entidades.Articulo;
 import com.example.demo.entidades.ProveedorArticulo;
 import com.example.demo.enums.ModeloInventario;
@@ -13,11 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.awt.print.Pageable;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 
@@ -44,10 +48,31 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
     }
 
     @Override
-    public List<Articulo> traerTodosArticulos() throws Exception {
+    public List<ArticuloDTO> traerTodosArticulos() throws Exception {
         try {
-            List<Articulo> articulos = articuloRepository.traerTodosArticulos();
-            return articulos;
+            List<ArticuloDTO> articuloDTOS;
+            List<Map<String, Object>> articulos = articuloRepository.traerTodosArticulos();
+            articuloDTOS = articulos.stream()
+                    .map(result->new ArticuloDTO(
+                            result.get("cantAPedir") != null ? ((Number) result.get("cantAPedir")).intValue() : 0,
+                            result.get("cantMax") != null ? ((Number) result.get("cantMax")).intValue() : 0,
+                            result.get("cgiArticulo") != null ? ((Number) result.get("cgiArticulo")).floatValue() : 0,
+                            result.get("costoAlmacenamiento") != null ? ((Number) result.get("costoAlmacenamiento")).longValue() : 0L,
+                            result.get("fechaAlta") != null ? (String) result.get("fechaAlta").toString() : "",
+                            result.get("id") != null ? ((Number) result.get("id")).longValue() : 0L,
+                            result.get("loteOptimo") != null ? ((Number) result.get("loteOptimo")).intValue() : 0,
+                            result.get("modeloInventario") != null ? (String) result.get("modeloInventario").toString() : "",
+                            result.get("nombre") != null ? (String) result.get("nombre") : "",
+                            result.get("precioCompra") != null ? ((Number) result.get("precioCompra")).longValue() : 0L,
+                            result.get("proveedorArticulo") != null ? (String) result.get("proveedorArticulo").toString() : "",
+                            result.get("puntoPedido") != null ? ((Number) result.get("puntoPedido")).intValue() : 0,
+                            result.get("stockActual") != null ? ((Number) result.get("stockActual")).intValue() : 0,
+                            result.get("stockDeSeguridad") != null ? ((Number) result.get("stockDeSeguridad")).intValue() : 0,
+                            result.get("tiempoEntrePedidos") != null ? ((Number) result.get("tiempoEntrePedidos")).intValue() : 0))
+
+                     .collect(Collectors.toList());
+
+            return articuloDTOS;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -55,27 +80,100 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
 
     @Override
     public void calculoLoteFijo(Long idArticulo, Long idProveedor, Long idMultiplicador) throws Exception {
-        try {
-            calcularCostoAlmacenamiento(idArticulo, idMultiplicador); //me da el valor pero la coma está mal ubicada quizas por el tipo de dato pero raaro
-            calcularPuntoPedido(idArticulo, idProveedor); //da bien
-            calcularLoteOptimo(idArticulo); //da bien
-            calcularCGI(idArticulo); //nose q le pasa q a veces me da y en otra me dice q no puede dividir por 0 paraa si el lote no cero hdp
-            calcularStockDeSeguridad(idArticulo); //da bien
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-
-        }
+        calcularCGI(idArticulo); //nose q le pasa q a veces me da y en otra me dice q no puede dividir por 0 paraa si el lote no cero hdp
+        calcularLoteOptimo(idArticulo); //da bien
+        calcularCostoAlmacenamiento(idArticulo, idMultiplicador); //me da el valor pero la coma está mal ubicada quizas por el tipo de dato pero raaro
+        calcularPuntoPedido(idArticulo, idProveedor); //da bien
+        calcularStockDeSeguridad(idArticulo); //da bien
     }
 
     @Override
     public void calculoIntervaloFijo(Long idArticulo) throws Exception {//este anda bien enterito
-        try{
-            calcularCantidadMaxima(idArticulo);
-            calcularCantidadAPedir(idArticulo);
-            calcularStockDeSeguridad(idArticulo);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+        calcularCantidadMaxima(idArticulo);
+        calcularCantidadAPedir(idArticulo);
+        calcularStockDeSeguridad(idArticulo);
+    }
+
+    @Override
+    public void crearArticulo(String nombre, long precioCompra, int stockDeSeguridad, int stockActual, int loteOptimo, int cantMax, String modeloInventario, String proveedorArticulo, Float cgiArticulo, int cantAPedir, int puntoPedido, int tiempoEntrePedidos) throws Exception {
+        Articulo articulo = new Articulo();
+        LocalDate date = LocalDate.now();
+        Date date1 = java.sql.Date.valueOf(date);
+
+        articulo.setProveedorArticulo(proveedorArticuloRepository.traerProveedorPorNombre(proveedorArticulo));
+        articulo.setPrecioCompra(precioCompra);
+        articulo.setCantMax(cantMax);
+        articulo.setFechaAlta(date1);
+        articulo.setModeloInventario(ModeloInventario.valueOf(modeloInventario.toUpperCase()));
+        articulo.setStockActual(stockActual);
+        articulo.setStockDeSeguridad(stockDeSeguridad);
+        articulo.setCantAPedir(cantAPedir);
+        articulo.setNombre(nombre);
+        articulo.setLoteOptimo(loteOptimo);
+        articulo.setCgiArticulo(cgiArticulo);
+        articulo.setPuntoPedido(puntoPedido);
+        articulo.setTiempoEntrePedidos(tiempoEntrePedidos);
+        articulo = articuloRepository.save(articulo);
+        articulo.setCostoAlmacenamiento(calcularCostoAlmacenamiento(articulo.getId(), 1L));
+        articuloRepository.save(articulo);
+    }
+
+    @Override
+    public void actualizarArticulo( Long id,
+                                    String nombre,
+                                    Float precioCompra,
+                                    Integer stockActual,
+                                    Integer stockDeSeguridad,
+                                    Integer loteOptimo,
+                                    Integer cantMax,
+                                    String modeloInventario,
+                                    String proveedorArticulo,
+                                    Float cgiArticulo,
+                                    Integer cantAPedir,
+                                    Integer puntoPedido,
+                                    Integer tiempoEntrePedidos) throws Exception {
+
+        Articulo articulo = articuloRepository.getReferenceById(id);
+
+        if (proveedorArticulo != null) {
+            articulo.setProveedorArticulo(proveedorArticuloRepository.traerProveedorPorNombre(proveedorArticulo));
         }
+        if (precioCompra != null) {
+            articulo.setPrecioCompra(precioCompra);
+        }
+        if (cantMax != null) {
+            articulo.setCantMax(cantMax);
+        }
+        if (modeloInventario != null) {
+            articulo.setModeloInventario(ModeloInventario.valueOf(modeloInventario.toUpperCase()));
+        }
+        if (stockActual != null) {
+            articulo.setStockActual(stockActual);
+        }
+        if (stockDeSeguridad != null) {
+            articulo.setStockDeSeguridad(stockDeSeguridad);
+        }
+        if (cantAPedir != null) {
+            articulo.setCantAPedir(cantAPedir);
+        }
+        if (nombre != null) {
+            articulo.setNombre(nombre);
+        }
+        if (loteOptimo != null) {
+            articulo.setLoteOptimo(loteOptimo);
+        }
+        if (cgiArticulo != null) {
+            articulo.setCgiArticulo(cgiArticulo);
+        }
+        if (puntoPedido != null) {
+            articulo.setPuntoPedido(puntoPedido);
+        }
+        if (tiempoEntrePedidos != null) {
+            articulo.setTiempoEntrePedidos(tiempoEntrePedidos);
+        }
+
+        articulo.setCostoAlmacenamiento(calcularCostoAlmacenamiento(articulo.getId(), 1L));
+        articuloRepository.save(articulo);
     }
 
     @Override
@@ -85,7 +183,7 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
                     .orElseThrow(() -> new Exception("Artículo no encontrado con id: " + idArticulo));
             ProveedorArticulo proveedorArticulo = articulo.getProveedorArticulo();
             // Verificar si el modelo de inventario es Lote Fijo
-            if (articulo.getModeloInventario() == ModeloInventario.LoteFijo) {
+            if (articulo.getModeloInventario() == ModeloInventario.LOTEFIJO) {
                 double demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
                 double eoq = Math.sqrt((2 * proveedorArticulo.getCostoPedido() * demandaAnual) / articulo.getCostoAlmacenamiento());
                 articulo.setLoteOptimo((int) eoq);
@@ -112,7 +210,7 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
             double costoPedido = proveedorArticulo.getCostoPedido();
             float cgi = 0;
             // Verificar si el modelo de inventario es Lote Fijo
-            if (articulo.getModeloInventario() == ModeloInventario.LoteFijo) {
+            if (articulo.getModeloInventario() == ModeloInventario.LOTEFIJO) {
                 cgi = (float) ((precio * demandaAnual) + (costoAlmacenamiento * (loteOptimo / 2)) + (costoPedido * (demandaAnual / loteOptimo)));
                 articulo.setCgiArticulo(cgi);
                 articuloRepository.save(articulo);
@@ -151,7 +249,7 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
             ProveedorArticulo proveedor = proveedorArticuloRepository.findById(idProveedor)
                     .orElseThrow(() -> new Exception("Proveedor no encontrado"));
             // Verificar si el modelo de inventario es Lote Fijo
-            if (articulo.getModeloInventario() == ModeloInventario.LoteFijo) {
+            if (articulo.getModeloInventario() == ModeloInventario.LOTEFIJO) {
                 // Obtener la demanda anual desde DemandaHistoricaService
                 int demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
                 double demandaDiaria = demandaAnual/365; //consideramos que trabajamos 365 dias al año
@@ -170,99 +268,116 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
 
     @Override
     public int calcularStockDeSeguridad(Long idArticulo) throws Exception {
-        try{
-            Articulo articulo = articuloRepository.findById(idArticulo)
-                    .orElseThrow(() -> new Exception("Artículo no encontrado"));
-            ProveedorArticulo proveedorArticulo = proveedorArticuloRepository.findById(articulo.getProveedorArticulo().getId())
-                    .orElseThrow(() -> new Exception("Proveedor no encontrado"));
-            //definimos un z=1,67
-            double Z = 1.67;
-            double desvEstandarD = 1.0; //el profe dijo que a la desviacion estandar de la demanda sea 1
-            int diasDemora = proveedorArticulo.getDiasDemora();
-            int tiempoEntrePedidos = articulo.getTiempoEntrePedidos();
-            int stockSeguridad = 0;
-            if (articulo.getModeloInventario() == ModeloInventario.LoteFijo) {
-                stockSeguridad= (int) (Z * desvEstandarD * Math.sqrt(diasDemora));
-                articulo.setStockDeSeguridad(stockSeguridad);
-            } else if (articulo.getModeloInventario() == ModeloInventario.IntervaloFijo) {
-                stockSeguridad=(int) (Z * desvEstandarD * Math.sqrt(tiempoEntrePedidos + diasDemora));
-                articulo.setStockDeSeguridad(stockSeguridad);
-            }
-            articuloRepository.save(articulo);
-            return stockSeguridad;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+        Articulo articulo = articuloRepository.findById(idArticulo)
+                .orElseThrow(() -> new Exception("Artículo no encontrado"));
+        ProveedorArticulo proveedorArticulo = proveedorArticuloRepository.findById(articulo.getProveedorArticulo().getId())
+                .orElseThrow(() -> new Exception("Proveedor no encontrado"));
+        //definimos un z=1,67
+        double Z = 1.67;
+        double desvEstandarD = 1.0; //el profe dijo que a la desviacion estandar de la demanda sea 1
+        int diasDemora = proveedorArticulo.getDiasDemora();
+        int tiempoEntrePedidos = articulo.getTiempoEntrePedidos();
+        int stockSeguridad = 0;
+        if (articulo.getModeloInventario() == ModeloInventario.LOTEFIJO) {
+            stockSeguridad= (int) (Z * desvEstandarD * Math.sqrt(diasDemora));
+            articulo.setStockDeSeguridad(stockSeguridad);
+        } else if (articulo.getModeloInventario() == ModeloInventario.INTERVALOFIJO) {
+            stockSeguridad=(int) (Z * desvEstandarD * Math.sqrt(tiempoEntrePedidos + diasDemora));
+            articulo.setStockDeSeguridad(stockSeguridad);
         }
+        articuloRepository.save(articulo);
+        return stockSeguridad;
     }
 
     @Override
     public int calcularCantidadMaxima(Long idArticulo) throws Exception {
-        try{
-            Articulo articulo = articuloRepository.findById(idArticulo)
-                    .orElseThrow(() -> new Exception("Artículo no encontrado"));
-            ProveedorArticulo proveedorArticulo = proveedorArticuloRepository.findById(articulo.getProveedorArticulo().getId())
-                    .orElseThrow(() -> new Exception("Proveedor no encontrado"));
-            int diasDemora = proveedorArticulo.getDiasDemora();
-            int tiempoEntrePedidos = articulo.getTiempoEntrePedidos();
-            // Obtener la demanda anual desde DemandaHistoricaService
-            int demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
-            int ss = articulo.getStockDeSeguridad();
-            int cantMax = 0;
-            float demandaDiaria = (float) demandaAnual /365; //consideramos que trabajamos 365 dias al año
-            if (articulo.getModeloInventario() == ModeloInventario.IntervaloFijo) {
-                cantMax = (int) (demandaDiaria * (tiempoEntrePedidos+diasDemora) + ss); //me da 2 numeritos menos de lo me debería dar
-                //antes el tipo de dato de demanda diaria era double y eran como 11 numeritos menos pero nose q tipo de dato ponerle para q se acerque más :(
-                articulo.setCantMax(cantMax);
-            } else {
-                throw new Exception("El modelo de inventario no es Intervalo Fijo. No se puede calcular la cantidad máxima.");
-            }
-            articuloRepository.save(articulo);
-            return cantMax;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+        Articulo articulo = articuloRepository.findById(idArticulo)
+                .orElseThrow(() -> new Exception("Artículo no encontrado"));
+        ProveedorArticulo proveedorArticulo = proveedorArticuloRepository.findById(articulo.getProveedorArticulo().getId())
+                .orElseThrow(() -> new Exception("Proveedor no encontrado"));
+        int diasDemora = proveedorArticulo.getDiasDemora();
+        int tiempoEntrePedidos = articulo.getTiempoEntrePedidos();
+        // Obtener la demanda anual desde DemandaHistoricaService
+        int demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
+        int ss = articulo.getStockDeSeguridad();
+        int cantMax = 0;
+        float demandaDiaria = (float) demandaAnual /365; //consideramos que trabajamos 365 dias al año
+        if (articulo.getModeloInventario() == ModeloInventario.INTERVALOFIJO) {
+            cantMax = (int) (demandaDiaria * (tiempoEntrePedidos+diasDemora) + ss); //me da 2 numeritos menos de lo me debería dar
+            //antes el tipo de dato de demanda diaria era double y eran como 11 numeritos menos pero nose q tipo de dato ponerle para q se acerque más :(
+            articulo.setCantMax(cantMax);
+        } else {
+            throw new Exception("El modelo de inventario no es Intervalo Fijo. No se puede calcular la cantidad máxima.");
         }
+        articuloRepository.save(articulo);
+        return cantMax;
+
     }
 
     @Override
     public int calcularCantidadAPedir(Long idArticulo) throws Exception {
-        try{
-            Articulo articulo = articuloRepository.findById(idArticulo)
-                    .orElseThrow(() -> new Exception("Artículo no encontrado"));
-            int inventario = articulo.getStockActual();
-            int cantMax = articulo.getCantMax();
-            int cantAPedir = 0;
-            if (articulo.getModeloInventario() == ModeloInventario.IntervaloFijo) {
-                cantAPedir = (cantMax-inventario);
-                articulo.setCantAPedir(cantAPedir);
-            } else {
-                throw new Exception("El modelo de inventario no es Intervalo Fijo. No se puede calcular la cantidad a pedir.");
-            }
-            articuloRepository.save(articulo);
-            return cantAPedir;
-        } catch (Exception e) {
+        Articulo articulo = articuloRepository.findById(idArticulo)
+                .orElseThrow(() -> new Exception("Artículo no encontrado"));
+        int inventario = articulo.getStockActual();
+        int cantMax = articulo.getCantMax();
+        int cantAPedir = 0;
+        if (articulo.getModeloInventario() == ModeloInventario.INTERVALOFIJO) {
+            cantAPedir = (cantMax-inventario);
+            articulo.setCantAPedir(cantAPedir);
+        } else {
+            throw new Exception("El modelo de inventario no es Intervalo Fijo. No se puede calcular la cantidad a pedir.");
+        }
+        articuloRepository.save(articulo);
+        return cantAPedir;
+    }
+
+    @Override
+    public Articulo traerUnArticuloId(Long id) throws ChangeSetPersister.NotFoundException {
+        // Assuming NotFoundException is a custom exception for indicating that an entity was not found
+        Articulo articulo = articuloRepository.traerUnArticuloId(id);
+        if (articulo == null) {
+            throw new ChangeSetPersister.NotFoundException();
+        }
+        return articulo;
+    }
+    @Override
+    public List<Articulo> traerArticuloBajoStock(int stockDeSeguridad, int stockActual) throws Exception {
+        try {
+            List<Articulo> articulo = articuloRepository.traerArticuloBajoStock(stockDeSeguridad, stockActual);
+            return articulo;
+        } catch (Exception e){
             throw new Exception(e.getMessage());
+        }
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<Articulo> traerArticulosFaltantes(int stockDeSeguridad, int stockActual) throws Exception {
+        try {List<Articulo> articulo = articuloRepository.traerArticulosFaltantes(stockDeSeguridad, stockActual);
+            return articulo;
+        } catch (Exception e) {
+            throw new Exception("Error al traer los artículos faltantes: " + e.getMessage());
+        }
+    }
+
+    public void darDeBajaArticulo(Articulo articulo) throws Exception {
+        if (ordenDeCompraService.buscarOrdenesActivas(articulo)) {
+            throw new Exception("No se puede dar de baja el artículo porque existen órdenes activas.");
+        }
+
+        try {
+            articulo.setFechaBaja(new Date());
+            articuloRepository.save(articulo);
+        } catch (Exception e) {
+            throw new Exception("Error al dar de baja el artículo: " + e.getMessage(), e);
         }
     }
 
 
     @Override
-    public List<Articulo> obtenerArticulosParaReorden() throws Exception {
-        try {
-            List<Articulo> articulos = articuloRepository.findAll();
-            List<Articulo> articulosParaReorden = new ArrayList<>();
-
-            for (Articulo articulo : articulos) {
-                if (articulo.getStockActual() <= articulo.getPuntoPedido() &&
-                        !ordenDeCompraService.buscarOrdenesActivas(articulo)) {
-                    articulosParaReorden.add(articulo);
-                }
-            }
-
-            return articulosParaReorden;
-        } catch (Exception e) {
-            throw new Exception("Error al obtener los artículos para reorden: " + e.getMessage());
-        }
+    public Page findAllPageable(Pageable pageable) throws Exception {
+        return null;
     }
+
 
     /*@Override
     public double calcularCGI(int stockActual, float precioCompra) throws Exception {
@@ -285,6 +400,13 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
     }*/
 
 
+
+    /*public int calcularStockSeguridad(int puntoPedido, int demoraProveedor) {
+        demoraProveedor = ProveedorArticulo.getDiasDemora();
+        int stockDeSeguridad = puntoPedido * demoraProveedor;
+        return this.stockDeSeguridad = stockDeSeguridad;
+    }
+*/
 
 /*    @Override
     public List<BusquedaArticulosDTO> traerTodosArticulos() throws Exception {
@@ -355,57 +477,7 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
             throw new Exception(e.getMessage());
         }
     }
-    @Override
-    public Articulo traerUnArticuloId(Long id) throws ChangeSetPersister.NotFoundException {
-        // Assuming NotFoundException is a custom exception for indicating that an entity was not found
-        Articulo articulo = articuloRepository.traerUnArticuloId(id);
-        if (articulo == null) {
-            throw new ChangeSetPersister.NotFoundException();
-        }
-        return articulo;
-    }
-    @Override
-    public List<Articulo> traerArticuloBajoStock(int stockDeSeguridad, int stockActual) throws Exception {
-        try {
-            List<Articulo> articulo = articuloRepository.traerArticuloBajoStock(stockDeSeguridad, stockActual);
-            return articulo;
-        } catch (Exception e){
-            throw new Exception(e.getMessage());
-        }
-    }
-    @Override
-    @Transactional(readOnly = true)
-    public List<Articulo> traerArticulosFaltantes(int stockDeSeguridad, int stockActual) throws Exception {
-        try {List<Articulo> articulo = articuloRepository.traerArticulosFaltantes(stockDeSeguridad, stockActual);
-            return articulo;
-        } catch (Exception e) {
-            throw new Exception("Error al traer los artículos faltantes: " + e.getMessage());
-        }
-    }
 
-    public void darDeBajaArticulo(Articulo articulo) throws Exception {
-        if (ordenDeCompraService.buscarOrdenesActivas(articulo)) {
-            throw new Exception("No se puede dar de baja el artículo porque existen órdenes activas.");
-        }
-
-        try {
-            articulo.setFechaBaja(new Date());
-            articuloRepository.save(articulo);
-        } catch (Exception e) {
-            throw new Exception("Error al dar de baja el artículo: " + e.getMessage(), e);
-        }
-    }
-
-
-    /*@Override
-    public double calcularCGI() throws Exception {
-        return articuloRepository.calcularCGIDeTodosArticulos();
-    }*/
-
-    @Override
-    public Page findAllPageable(Pageable pageable) throws Exception {
-        return null;
-    }
 
 /*    @Override
     public Page<ArticuloInsumo> search(String denominacion, Number min, Number max, Number stockMenor, Number minStock, Number maxStock, Pageable pageable) throws Exception {

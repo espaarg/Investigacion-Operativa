@@ -47,4 +47,10 @@ public class ProveedorArticuloServiceImpl extends BaseServiceImpl<ProveedorArtic
     public org.springframework.data.domain.Page<ProveedorArticulo> search(String codigo, org.springframework.data.domain.Pageable pageable) throws Exception {
         return null;
     }
+
+    @Override
+    public ProveedorArticulo traerProveedorPorNombre(String nombre) {
+        ProveedorArticulo proveedorArticulo = proveedorArticuloRepository.traerProveedorPorNombre(nombre);
+        return proveedorArticulo;
+    }
 }
