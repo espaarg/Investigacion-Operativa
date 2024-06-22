@@ -7,7 +7,7 @@ import com.example.demo.entidades.DemandaHistorica;
 import java.util.Date;
 import java.util.List;
 
-public interface DemandaHistoricaService extends BaseService<DemandaHistorica, Long>{
+public interface DemandaHistoricaService extends BaseService<DemandaHistorica, Long> {
 
     void crearDemandaHistorica(Long idArticulo, String fechaDesde, String fechaHasta) throws Exception;
 
@@ -18,4 +18,7 @@ public interface DemandaHistoricaService extends BaseService<DemandaHistorica, L
     void eliminarDemandaHistorica(Long id) throws Exception;
 
     Integer obtenerDemandaAnual(Long idArticulo) throws Exception;
+
+    Integer buscarDemandaAnual(Long idArticulo, Date fechaDesde, Date fechaHasta) throws Exception;
+
 }

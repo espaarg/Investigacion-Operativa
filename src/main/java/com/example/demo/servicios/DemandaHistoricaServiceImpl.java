@@ -109,9 +109,19 @@ public class DemandaHistoricaServiceImpl extends BaseServiceImpl<DemandaHistoric
         return null;
     }
 
+    //trae la mas reciente
     public Integer obtenerDemandaAnual(Long idArticulo) throws Exception {
         try {
             return demandaHistoricaRepository.findCantidadVendidaMasReciente(idArticulo);
+        } catch (Exception e) {
+            throw new Exception("Error al obtener la cantidad vendida más reciente: " + e.getMessage());
+        }
+    }
+
+    //trae la de una fecha especifica
+    public Integer buscarDemandaAnual(Long idArticulo, Date fechaDesde, Date fechaHasta) throws Exception {
+        try {
+            return demandaHistoricaRepository.findDemanda(idArticulo, fechaDesde, fechaHasta);
         } catch (Exception e) {
             throw new Exception("Error al obtener la cantidad vendida más reciente: " + e.getMessage());
         }

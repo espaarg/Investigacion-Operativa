@@ -5,6 +5,7 @@ import com.example.demo.entidades.DemandaHistorica;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,4 +28,12 @@ public interface DemandaHistoricaRepository extends BaseRepository<DemandaHistor
             "ORDER BY dh.fechaFin DESC " +
             "LIMIT 1", nativeQuery = false)
     Integer findCantidadVendidaMasReciente(@Param("idArticulo") Long idArticulo);
+
+    @Query("SELECT dh.cantidadVendida " +
+            "FROM DemandaHistorica dh " +
+            "WHERE dh.articulo.id = :idArticulo " +
+            "AND dh.fechaInicio = :fechaDesde " +
+            "AND dh.fechaFin = :fechaHasta")
+    Integer findDemanda(@Param("idArticulo") Long idArticulo, @Param("fechaDesde") Date fechaDesde, @Param("fechaHasta") Date fechaHasta);
+
 }

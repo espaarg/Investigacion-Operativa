@@ -11,6 +11,7 @@ public class PrediccionPMPDTO {
     private List<Double> coeficientesPonderacion;
     private Articulo articulo;
 
+    private int cantidadPeriodosAtras;
     private int mesAPredecir;
     private int anioAPredecir;
 
