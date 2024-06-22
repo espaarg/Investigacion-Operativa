@@ -178,6 +178,17 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
         }
     }
 
+    @GetMapping("/articulosParaReorden")
+    public ResponseEntity<?> obtenerArticulosParaReorden() {
+        try {
+            List<Articulo> articulosParaReorden = servicio.obtenerArticulosParaReorden();
+            return ResponseEntity.status(HttpStatus.OK).body(articulosParaReorden);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+
    /* @GetMapping("/calcularCGI")
     public ResponseEntity<?> calcularCGI(int stockActual, float precioCompra) {
         try{

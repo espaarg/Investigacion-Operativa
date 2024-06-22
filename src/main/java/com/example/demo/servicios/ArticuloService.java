@@ -43,7 +43,7 @@ public interface ArticuloService extends BaseService<Articulo, Long> {
 
     public void calculoIntervaloFijo(Long idArticulo) throws Exception;
 
-
+    public List<Articulo> obtenerArticulosParaReorden() throws Exception;
 
 
 }
