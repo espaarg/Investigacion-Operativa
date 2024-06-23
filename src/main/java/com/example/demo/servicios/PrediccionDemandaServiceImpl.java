@@ -1,6 +1,7 @@
 package com.example.demo.servicios;
 
 import com.example.demo.dtos.PrediccionPMPDTO;
+import com.example.demo.dtos.PrediccionPMSEDTO;
 import com.example.demo.entidades.Articulo;
 import com.example.demo.entidades.PrediccionDemanda;
 import com.example.demo.repositorios.BaseRepository;
@@ -51,6 +52,11 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
 
                 // Obtener la demanda histórica creada
                 int demanda = demandaHistoricaService.buscarDemandaAnual(idArticulo, fechaDesdeDate, fechaHastaDate);
+
+                if(demanda <0) {
+                    demanda = 0;
+                }
+
                 demandasHistoricas.add(demanda);
             }
 
@@ -79,6 +85,85 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
 
         } catch (Exception e) {
             throw new Exception("Error al calcular la prediccionPMP: " + e.getMessage());
+        }
+    }
+
+    public double calcularPromedioMovilMesAnterior(Long idArticulo, LocalDate fechaDesdeLocalDate) throws Exception{
+        try{
+            List<Integer> demandasHistoricas = new ArrayList<>();
+
+            // Crear demanda histórica para los tres meses anteriores al mes seleccionado
+            for (int i =3; i > 0; i--) {
+                LocalDate inicioMes = fechaDesdeLocalDate.minus(i, ChronoUnit.MONTHS);
+                LocalDate finMes = inicioMes.withDayOfMonth(inicioMes.lengthOfMonth());
+
+                String fechaDesde = inicioMes.toString();
+                String fechaHasta = finMes.toString();
+
+                demandaHistoricaService.crearDemandaHistorica(idArticulo, fechaDesde, fechaHasta);
+
+                Date fechaDesdeDate = java.sql.Date.valueOf(inicioMes);
+                Date fechaHastaDate = java.sql.Date.valueOf(finMes);
+
+                // Obtener la demanda histórica creada
+                int demanda = demandaHistoricaService.buscarDemandaAnual(idArticulo, fechaDesdeDate, fechaHastaDate);
+                demandasHistoricas.add(demanda);
+
+                if(demanda <0) {
+                    demanda = 0;
+                }
+            }
+            // Calcular la predicción de la demanda utilizando el Promedio Móvil
+            double suma= 0.0;
+
+            for (int j = 0; j < 3; j++) {
+                suma += demandasHistoricas.get(j);
+            }
+
+            suma= suma/3;
+
+            return (suma);
+
+        }catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+    public double predecirDemandaPMSuavizadoExponencial(PrediccionPMSEDTO prediccionPMSEDTO) throws Exception{
+        try {
+            Articulo articulo = prediccionPMSEDTO.getArticulo();
+            Long idArticulo = articulo.getId();
+            int mesAPredecir = prediccionPMSEDTO.getMesAPredecir();
+            int anioAPredecir = prediccionPMSEDTO.getAnioAPredecir();
+            double alfa= prediccionPMSEDTO.getAlfa();
+
+            // Crear demanda histórica para el mes anterior al mes seleccionado
+            LocalDate inicioMes = LocalDate.of(anioAPredecir, mesAPredecir, 1).minus(1, ChronoUnit.MONTHS);
+            LocalDate finMes = inicioMes.withDayOfMonth(inicioMes.lengthOfMonth());
+
+            String fechaDesde = inicioMes.toString();
+            String fechaHasta = finMes.toString();
+
+            demandaHistoricaService.crearDemandaHistorica(idArticulo, fechaDesde, fechaHasta);
+
+            Date fechaDesdeDate = java.sql.Date.valueOf(inicioMes);
+            Date fechaHastaDate = java.sql.Date.valueOf(finMes);
+
+            // Obtener la demanda histórica creada
+            int demanda = demandaHistoricaService.buscarDemandaAnual(idArticulo, fechaDesdeDate, fechaHastaDate);
+
+            //obtengo prediccion mes anterior con promedio movil
+            LocalDate fechaDesdeLocalDate = java.sql.Date.valueOf(inicioMes).toLocalDate();
+            double prediccionMesAnterior;
+
+            prediccionMesAnterior= calcularPromedioMovilMesAnterior(idArticulo, fechaDesdeLocalDate);
+
+            //calculo el pronostico
+            double prediccion=0.0;
+            prediccion= prediccionMesAnterior + alfa * (demanda - prediccionMesAnterior);
+            return prediccion;
+
+        } catch (Exception e) {
+            throw new Exception("Error al calcular la prediccionPMSE: " + e.getMessage());
         }
     }
 
