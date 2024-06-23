@@ -11,6 +11,10 @@ public interface ArticuloService extends BaseService<Articulo, Long> {
 
     List<ArticuloDTO> traerTodosArticulos() throws Exception;
     List<Articulo> traerUnArticuloNombre(String nombre) throws Exception;
+    Long traerUnIdArticuloNombre(String nombre) throws Exception;
+
+    Long traerIdProveedor(String nombre) throws Exception;
+
     Articulo traerUnArticuloId(Long id) throws Exception;
     List<Articulo> traerArticuloBajoStock(int stockDeSeguridad, int stockActual) throws Exception;
 
@@ -40,6 +44,8 @@ public interface ArticuloService extends BaseService<Articulo, Long> {
     public void calculoLoteFijo(Long idArticulo, Long idProveedor, Long idMultiplicador) throws Exception;
 
     public void calculoIntervaloFijo(Long idArticulo) throws Exception;
+
+    public void actualizarValores() throws Exception;
 
 /*    List<ControlStockDTO> controlStockInsuficiente() throws Exception;
 

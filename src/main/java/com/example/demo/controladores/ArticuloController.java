@@ -44,6 +44,27 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }
     }
+
+    @GetMapping("/idArticulo")
+    public ResponseEntity<?> traerUnIdArticuloId(String nombre){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerUnIdArticuloNombre(nombre));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }
+
+    @GetMapping("/idProveedor")
+    public ResponseEntity<?> traerIdProveedor(String nombre){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerUnIdArticuloNombre(nombre));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }
+
     @GetMapping("/allArticuloBajoStock")
     public ResponseEntity<?> traerArticuloBajoStock(int stockDeSeguridad, int stockActual){
         try{
@@ -71,6 +92,16 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
             return ResponseEntity.ok("Artículo dado de baja correctamente.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/actualizarValores")
+    public ResponseEntity<?> actualizarValores() {
+        try {
+            servicio.actualizarValores();
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
 

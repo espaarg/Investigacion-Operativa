@@ -1,5 +1,7 @@
 package com.example.demo.dtos;
 
+import com.example.demo.enums.ModeloInventario;
+
 public class ArticuloDTO {
 
     int cantAPedir;
@@ -7,7 +9,7 @@ public class ArticuloDTO {
     Float cgiArticulo;
     float costoAlmacenamiento;
     String fechaAlta;
-    float id;
+    Long id;
     int loteOptimo;
     String modeloInventario;
     String nombre;
@@ -19,7 +21,7 @@ public class ArticuloDTO {
     int tiempoEntrePedidos;
 
 
-    public ArticuloDTO(int cantAPedir, int cantMax, float cgiArticulo, float costoAlmacenamiento, String fechaAlta, float id, int loteOptimo, String modeloInventario, String nombre, float precioCompra, String proveedorArticulo, int puntoPedido, int stockActual, int stockDeSeguridad, int tiempoEntrePedidos) {
+    public ArticuloDTO(int cantAPedir, int cantMax, float cgiArticulo, float costoAlmacenamiento, String fechaAlta, Long id, int loteOptimo, String modeloInventario, String nombre, float precioCompra, String proveedorArticulo, int puntoPedido, int stockActual, int stockDeSeguridad, int tiempoEntrePedidos) {
         this.cantAPedir = cantAPedir;
         this.cantMax = cantMax;
         this.cgiArticulo = cgiArticulo;
@@ -80,7 +82,7 @@ public class ArticuloDTO {
         this.fechaAlta = fechaAlta;
     }
 
-    public float getId() {
+    public Long getId() {
         return id;
     }
 

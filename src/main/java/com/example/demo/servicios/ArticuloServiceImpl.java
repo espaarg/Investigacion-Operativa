@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,6 +77,22 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+    }
+
+    @Override
+    public void actualizarValores() throws Exception {
+        List<ArticuloDTO> articuloDTOS = traerTodosArticulos();
+        MultiplicadorCostoAlmacenamiento multiplicador = multiplicadorCostoAlmacenamientoRepository.getReferenceById(1L);
+        for (ArticuloDTO articulo : articuloDTOS){
+            if (Objects.equals(articulo.getModeloInventario(), ModeloInventario.LOTEFIJO.toString())){
+                String nombre = articulo.getNombre();
+                calculoLoteFijo(articuloRepository.traerUnIdArticuloNombre(nombre) ,articuloRepository.traerIdProveedor(nombre), multiplicador.getId());
+            }else if (Objects.equals(articulo.getModeloInventario(), ModeloInventario.INTERVALOFIJO.toString())){
+                String nombre = articulo.getNombre();
+                calculoIntervaloFijo(articuloRepository.traerUnIdArticuloNombre(nombre));
+            }
+        }
+
     }
 
     @Override
@@ -473,6 +490,25 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
         try {
             List<Articulo> articulo = articuloRepository.traerUnArticuloNombre(nombre);
             return articulo;
+        } catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public Long traerUnIdArticuloNombre(String nombre) throws Exception {
+        try {
+            Long idArticuloNombre = articuloRepository.traerUnIdArticuloNombre(nombre);
+            return idArticuloNombre;
+        } catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+    @Override
+    public Long traerIdProveedor(String nombre) throws Exception {
+        try {
+            Long idProveedor = articuloRepository.traerUnIdArticuloNombre(nombre);
+            return idProveedor;
         } catch (Exception e){
             throw new Exception(e.getMessage());
         }
