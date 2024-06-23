@@ -21,7 +21,7 @@ public class PrediccionDemandaController extends BaseControllerImpl<PrediccionDe
     @PostMapping("/predecirPMP")
     public ResponseEntity<?> predecirDemandaPMP(@RequestBody PrediccionPMPDTO prediccionPMPDTO) {
         try {
-            Integer resultado = prediccionDemandaService.predecirDemandaPMP(prediccionPMPDTO);
+            double resultado = prediccionDemandaService.predecirDemandaPMP(prediccionPMPDTO);
             return ResponseEntity.status(HttpStatus.OK).body(resultado);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");

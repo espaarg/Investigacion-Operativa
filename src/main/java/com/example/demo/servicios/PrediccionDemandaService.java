@@ -5,6 +5,6 @@ import com.example.demo.entidades.PrediccionDemanda;
 
 public interface PrediccionDemandaService extends BaseService<PrediccionDemanda, Long>{
 
-    public Integer predecirDemandaPMP(PrediccionPMPDTO prediccionPMPDTO) throws Exception;
+    public double predecirDemandaPMP(PrediccionPMPDTO prediccionPMPDTO) throws Exception;
 
 }

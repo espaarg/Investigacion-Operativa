@@ -4,7 +4,6 @@ import com.example.demo.dtos.PrediccionPMPDTO;
 import com.example.demo.entidades.Articulo;
 import com.example.demo.entidades.PrediccionDemanda;
 import com.example.demo.repositorios.BaseRepository;
-import lombok.Data;
 import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,7 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
     @Autowired
     private DemandaHistoricaServiceImpl demandaHistoricaService;
 
-    public Integer predecirDemandaPMP(PrediccionPMPDTO prediccionPMPDTO) throws Exception {
+    public double predecirDemandaPMP(PrediccionPMPDTO prediccionPMPDTO) throws Exception {
         try {
             Articulo articulo = prediccionPMPDTO.getArticulo();
             Long idArticulo = articulo.getId();
@@ -76,7 +75,7 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             //System.out.println("Suma ponderada: " + sumaPonderada);
             //System.out.println("Suma de pesos: " + sumaPesos);
 
-            return (sumaPesos != 0) ? (int) (sumaPonderada / sumaPesos) : 0;
+            return (sumaPesos != 0) ? (double) (sumaPonderada / sumaPesos) : 0;
 
         } catch (Exception e) {
             throw new Exception("Error al calcular la prediccionPMP: " + e.getMessage());
