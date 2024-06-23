@@ -45,19 +45,20 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
                 String fechaDesde = inicioMes.toString();
                 String fechaHasta = finMes.toString();
 
-                demandaHistoricaService.crearDemandaHistorica(idArticulo, fechaDesde, fechaHasta);
-
                 Date fechaDesdeDate = java.sql.Date.valueOf(inicioMes);
                 Date fechaHastaDate = java.sql.Date.valueOf(finMes);
 
                 // Obtener la demanda histórica creada
                 int demanda = demandaHistoricaService.buscarDemandaAnual(idArticulo, fechaDesdeDate, fechaHastaDate);
 
-                if(demanda <0) {
-                    demanda = 0;
+                if(demanda == 0) {
+                    demandaHistoricaService.crearDemandaHistorica(idArticulo, fechaDesde, fechaHasta);
+                    int demanda1 = demandaHistoricaService.buscarDemandaAnual(idArticulo, fechaDesdeDate, fechaHastaDate);
+                    demandasHistoricas.add(demanda1);
+                } else{
+                    demandasHistoricas.add(demanda);
                 }
 
-                demandasHistoricas.add(demanda);
             }
 
             // Imprimir valores de coeficientes y demandas históricas para depuración
@@ -100,27 +101,33 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
                 String fechaDesde = inicioMes.toString();
                 String fechaHasta = finMes.toString();
 
-                demandaHistoricaService.crearDemandaHistorica(idArticulo, fechaDesde, fechaHasta);
-
                 Date fechaDesdeDate = java.sql.Date.valueOf(inicioMes);
                 Date fechaHastaDate = java.sql.Date.valueOf(finMes);
 
                 // Obtener la demanda histórica creada
                 int demanda = demandaHistoricaService.buscarDemandaAnual(idArticulo, fechaDesdeDate, fechaHastaDate);
-                demandasHistoricas.add(demanda);
 
-                if(demanda <0) {
-                    demanda = 0;
+                if(demanda ==0) {
+                    demandaHistoricaService.crearDemandaHistorica(idArticulo, fechaDesde, fechaHasta);
+                    int demanda1 = demandaHistoricaService.buscarDemandaAnual(idArticulo, fechaDesdeDate, fechaHastaDate);
+                    demandasHistoricas.add(demanda1);
+                } else{
+                    demandasHistoricas.add(demanda);
                 }
+
+
             }
             // Calcular la predicción de la demanda utilizando el Promedio Móvil
             double suma= 0.0;
+
+
 
             for (int j = 0; j < 3; j++) {
                 suma += demandasHistoricas.get(j);
             }
 
             suma= suma/3;
+            System.out.println(suma);
 
             return (suma);
 
@@ -142,14 +149,17 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
 
             String fechaDesde = inicioMes.toString();
             String fechaHasta = finMes.toString();
-
-            demandaHistoricaService.crearDemandaHistorica(idArticulo, fechaDesde, fechaHasta);
-
             Date fechaDesdeDate = java.sql.Date.valueOf(inicioMes);
             Date fechaHastaDate = java.sql.Date.valueOf(finMes);
 
             // Obtener la demanda histórica creada
             int demanda = demandaHistoricaService.buscarDemandaAnual(idArticulo, fechaDesdeDate, fechaHastaDate);
+
+            if(demanda ==0) {
+                demandaHistoricaService.crearDemandaHistorica(idArticulo, fechaDesde, fechaHasta);
+                int demanda1 = demandaHistoricaService.buscarDemandaAnual(idArticulo, fechaDesdeDate, fechaHastaDate);
+                demanda= demanda1;
+            }
 
             //obtengo prediccion mes anterior con promedio movil
             LocalDate fechaDesdeLocalDate = java.sql.Date.valueOf(inicioMes).toLocalDate();
@@ -160,6 +170,8 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             //calculo el pronostico
             double prediccion=0.0;
             prediccion= prediccionMesAnterior + alfa * (demanda - prediccionMesAnterior);
+            System.out.println(prediccion);
+            System.out.println(demanda);
             return prediccion;
 
         } catch (Exception e) {

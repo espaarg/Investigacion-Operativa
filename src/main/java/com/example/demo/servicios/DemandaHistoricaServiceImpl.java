@@ -121,9 +121,15 @@ public class DemandaHistoricaServiceImpl extends BaseServiceImpl<DemandaHistoric
     //trae la de una fecha especifica
     public Integer buscarDemandaAnual(Long idArticulo, Date fechaDesde, Date fechaHasta) throws Exception {
         try {
-            return demandaHistoricaRepository.findDemanda(idArticulo, fechaDesde, fechaHasta);
+            Integer demanda= demandaHistoricaRepository.findDemanda(idArticulo, fechaDesde, fechaHasta);
+            if(demanda == null){
+                return 0;
+            }else{
+                return demanda;
+            }
+
         } catch (Exception e) {
-            throw new Exception("Error al obtener la cantidad vendida más reciente: " + e.getMessage());
+            throw new Exception("Error al obtener demanda: " + e.getMessage());
         }
     }
 
