@@ -39,7 +39,7 @@ public class VentaServiceImpl extends BaseServiceImpl<Venta, Long> implements Ve
     }
 
     @Override
-    public List<Venta> traerTodasVentas() throws Exception {
+    public List<VentaDTO> traerTodasVentas() throws Exception {
         try {
             List<Venta> ventas = ventaRepository.traerTodasVentas();
             List<VentaDTO> ventasDTO = new java.util.ArrayList<>(List.of());
@@ -50,7 +50,7 @@ public class VentaServiceImpl extends BaseServiceImpl<Venta, Long> implements Ve
                 ventaN.setMontoTotal((long) venta.getMontoTotal());
                 ventasDTO.add(ventaN);
             }
-            return ventas;
+            return ventasDTO;
         } catch (Exception e){
             throw new Exception(e.getMessage());
         }

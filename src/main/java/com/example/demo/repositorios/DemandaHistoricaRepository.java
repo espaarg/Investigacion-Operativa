@@ -36,4 +36,10 @@ public interface DemandaHistoricaRepository extends BaseRepository<DemandaHistor
             "AND dh.fechaFin = :fechaHasta")
     Integer findDemanda(@Param("idArticulo") Long idArticulo, @Param("fechaDesde") Date fechaDesde, @Param("fechaHasta") Date fechaHasta);
 
+    @Query(value = "SELECT * " +
+                    "FROM demanda_historica dh " +
+                    "WHERE dh.articulo_id = %:idArticulo% "
+                    , nativeQuery = true)
+    List<DemandaHistorica> hayDemanda(@Param("idArticulo") Long idArticulo);
+
 }

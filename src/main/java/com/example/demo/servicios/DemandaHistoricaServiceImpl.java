@@ -27,6 +27,8 @@ public class DemandaHistoricaServiceImpl extends BaseServiceImpl<DemandaHistoric
 
     @Autowired
     private DemandaHistoricaRepository demandaHistoricaRepository;
+    @Autowired
+    private ArticuloServiceImpl articuloServiceImpl;
 
     public DemandaHistoricaServiceImpl(BaseRepository<DemandaHistorica, Long> baseRepository, DemandaHistoricaRepository demandaHistoricaRepository) {
         super(baseRepository);
@@ -79,6 +81,7 @@ public class DemandaHistoricaServiceImpl extends BaseServiceImpl<DemandaHistoric
         demandaHistorica.setFechaBaja(null);
         demandaHistorica.setArticulo(articuloRepository.traerUnArticuloId(idArticulo));
         demandaHistoricaRepository.save(demandaHistorica);
+        articuloServiceImpl.calcularCGI(idArticulo);
 
     }
 
