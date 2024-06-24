@@ -231,7 +231,7 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             }
 
             // Calcular la predicción de la demanda
-            double indiceEstacionalidadMesPredecir = indicesEstacionalidad[mesAPredecir - 1];
+            double indiceEstacionalidadMesPredecir = indicesEstacionalidad[mesAPredecir];
             double demandaPredicha = ((double) cantUnidadesEsperadas / promedioGeneral) * indiceEstacionalidadMesPredecir;
 
             return demandaPredicha;
