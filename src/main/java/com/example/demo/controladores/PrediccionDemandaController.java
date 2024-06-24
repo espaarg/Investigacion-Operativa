@@ -1,5 +1,6 @@
 package com.example.demo.controladores;
 
+import com.example.demo.dtos.PrediccionEstacionalDTO;
 import com.example.demo.dtos.PrediccionPMPDTO;
 import com.example.demo.dtos.PrediccionPMSEDTO;
 import com.example.demo.entidades.PrediccionDemanda;
@@ -38,5 +39,18 @@ public class PrediccionDemandaController extends BaseControllerImpl<PrediccionDe
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+
+  @PostMapping("/predecirEstacional")
+    public ResponseEntity<?> predecirDemandaEstacional(@RequestBody PrediccionEstacionalDTO prediccionEstacionalDTO) {
+        try {
+            System.out.println("Recibido: " + prediccionEstacionalDTO);
+            double resultado = prediccionDemandaService.predecirDemandaEstacional(prediccionEstacionalDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(resultado);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package com.example.demo.servicios;
 
+import com.example.demo.dtos.PrediccionEstacionalDTO;
 import com.example.demo.dtos.PrediccionPMPDTO;
 import com.example.demo.dtos.PrediccionPMSEDTO;
 import com.example.demo.entidades.Articulo;
@@ -178,6 +179,69 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             throw new Exception("Error al calcular la prediccionPMSE: " + e.getMessage());
         }
     }
+
+    @Override
+    public double predecirDemandaEstacional(PrediccionEstacionalDTO prediccionEstacionalDTO) throws Exception {
+        try {
+            Articulo articulo = prediccionEstacionalDTO.getArticulo();
+            Long idArticulo = articulo.getId();
+            int cantidadDePeriodos = prediccionEstacionalDTO.getCantidadDePeriodos();
+            int cantidadDeAniosAtras = prediccionEstacionalDTO.getCantidadDeaniosAtras();
+            int cantUnidadesEsperadas = prediccionEstacionalDTO.getCantUnidadesEsperadas();
+            int mesAPredecir = prediccionEstacionalDTO.getMesAPredecir();
+            int anioAPredecir = prediccionEstacionalDTO.getAnioAPredecir();
+
+            double[] promediosAnuales = new double[cantidadDePeriodos];
+            double promedioGeneral = 0.0;
+            int[] demandasTotales = new int[cantidadDePeriodos];
+
+            // Recopilar las demandas históricas y calcular el promedio de cada periodo para cada año
+            for (int anio = 0; anio < cantidadDeAniosAtras; anio++) {
+                for (int periodo = 0; periodo < cantidadDePeriodos; periodo++) {
+                    LocalDate inicioPeriodo = LocalDate.of(anioAPredecir - anio - 1, periodo + 1, 1);
+                    LocalDate finPeriodo = inicioPeriodo.withDayOfMonth(inicioPeriodo.lengthOfMonth());
+
+                    String fechaDesde = inicioPeriodo.toString();
+                    String fechaHasta = finPeriodo.toString();
+                    Date fechaDesdeDate = java.sql.Date.valueOf(inicioPeriodo);
+                    Date fechaHastaDate = java.sql.Date.valueOf(finPeriodo);
+
+                    int demanda = demandaHistoricaService.buscarDemandaAnual(idArticulo, fechaDesdeDate, fechaHastaDate);
+                    if (demanda <= 0) { // Verifica si la demanda es nula o no existe
+                        // Llama al método para crear la demanda histórica
+                        demandaHistoricaService.crearDemandaHistorica(idArticulo, fechaDesde, fechaHasta);
+                        // Vuelve a consultar la demanda después de crearla
+                        demanda = demandaHistoricaService.buscarDemandaAnual(idArticulo, fechaDesdeDate, fechaHastaDate);
+                    }
+                    demandasTotales[periodo] += demanda;
+                }
+            }
+
+            // Calcular el promedio de cada periodo y el promedio general
+            for (int periodo = 0; periodo < cantidadDePeriodos; periodo++) {
+                promediosAnuales[periodo] = (double) demandasTotales[periodo] / cantidadDeAniosAtras;
+                promedioGeneral += promediosAnuales[periodo];
+            }
+            promedioGeneral /= cantidadDePeriodos;
+
+            // Calcular el índice de estacionalidad para cada periodo
+            double[] indicesEstacionalidad = new double[cantidadDePeriodos];
+            for (int periodo = 0; periodo < cantidadDePeriodos; periodo++) {
+                indicesEstacionalidad[periodo] = promediosAnuales[periodo] / promedioGeneral;
+            }
+
+            // Calcular la predicción de la demanda
+            double indiceEstacionalidadMesPredecir = indicesEstacionalidad[mesAPredecir - 1];
+            double demandaPredicha = ((double) cantUnidadesEsperadas / promedioGeneral) * indiceEstacionalidadMesPredecir;
+
+            return demandaPredicha;
+
+        } catch (Exception e) {
+            throw new Exception("Error al calcular la predicción de demanda estacional: " + e.getMessage());
+        }
+    }
+
+
 
     @Override
     public Page findAllPageable(Pageable pageable) throws Exception {
