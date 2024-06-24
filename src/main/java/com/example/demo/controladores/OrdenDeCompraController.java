@@ -23,7 +23,7 @@ public class OrdenDeCompraController extends BaseControllerImpl<OrdenDeCompra, O
             return ResponseEntity.status(HttpStatus.OK).body(servicio.traerTodasOrdenes());
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }
     }
 
@@ -37,13 +37,31 @@ public class OrdenDeCompraController extends BaseControllerImpl<OrdenDeCompra, O
         }
     }*/
 
+    @PostMapping("/confirmar")
+    public ResponseEntity<?> confirmarOrden(@RequestParam Long id){
+        try{
+            servicio.confirmarOrden(id);
+            return ResponseEntity.status(HttpStatus.OK).body("OK");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }
+
     @PostMapping("/create")
-    public ResponseEntity<?> crearOrdenDeCompra(@RequestBody List<PedidoArticuloDTO> articuloDTOS){
+    public ResponseEntity<?> crearOrdenDeCompra(
+            @RequestParam Long idArticulo,
+            @RequestParam int cantidad,
+            @RequestParam Long idProveedor) {
         try {
-            servicio.crearOrdenDeCompra(articuloDTOS);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Orden creada");
-        } catch(Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+            if (idArticulo == null || idProveedor == null || cantidad <= 0) {
+                throw new IllegalArgumentException("Valores inválidos proporcionados");
+            } else {
+                servicio.crearOrdenDeCompra(idArticulo, cantidad, idProveedor);
+                return ResponseEntity.status(HttpStatus.CREATED).body("Orden creada");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }
     }
 

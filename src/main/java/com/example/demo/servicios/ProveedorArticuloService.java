@@ -1,6 +1,5 @@
 package com.example.demo.servicios;
 
-import com.example.demo.entidades.PedidoArticulo;
 import com.example.demo.entidades.ProveedorArticulo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

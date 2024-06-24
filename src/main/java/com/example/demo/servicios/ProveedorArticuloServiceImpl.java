@@ -1,9 +1,7 @@
 package com.example.demo.servicios;
 
-import com.example.demo.entidades.PedidoArticulo;
 import com.example.demo.entidades.ProveedorArticulo;
 import com.example.demo.repositorios.BaseRepository;
-import com.example.demo.repositorios.PedidoArticuloRepository;
 import com.example.demo.repositorios.ProveedorArticuloRepository;
 import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;

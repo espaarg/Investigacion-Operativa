@@ -3,21 +3,43 @@ package com.example.demo.dtos;
 public class OrdenDeCompraDTO {
     private long id;
     private float totalCompra;
-    private int totalArticulos;
+    private int cantidad;
+    private float precioIndividual;
     private String fechaPedido;
+    private String fechaLlegada;
     private String estadoOrdenDeCompra;
     private String proveedorArticulo;
+    private String nombreArticulo;
 
-    public OrdenDeCompraDTO(String estadoOrdenDeCompra, String fechaPedido, long id, String proveedorArticulo, int totalArticulos, float totalCompra) {
+    public OrdenDeCompraDTO(String nombreArticulo, int cantidad, String estadoOrdenDeCompra, String fechaLlegada, String fechaPedido, long id, float precioIndividual, String proveedorArticulo, float totalCompra) {
+        this.nombreArticulo = nombreArticulo;
+        this.cantidad = cantidad;
         this.estadoOrdenDeCompra = estadoOrdenDeCompra;
+        this.fechaLlegada = fechaLlegada;
         this.fechaPedido = fechaPedido;
         this.id = id;
+        this.precioIndividual = precioIndividual;
         this.proveedorArticulo = proveedorArticulo;
-        this.totalArticulos = totalArticulos;
         this.totalCompra = totalCompra;
     }
 
     public OrdenDeCompraDTO() {
+    }
+
+    public String getNombreArticulo() {
+        return nombreArticulo;
+    }
+
+    public void setNombreArticulo(String nombreArticulo) {
+        this.nombreArticulo = nombreArticulo;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
     }
 
     public String getEstadoOrdenDeCompra() {
@@ -26,6 +48,14 @@ public class OrdenDeCompraDTO {
 
     public void setEstadoOrdenDeCompra(String estadoOrdenDeCompra) {
         this.estadoOrdenDeCompra = estadoOrdenDeCompra;
+    }
+
+    public String getFechaLlegada() {
+        return fechaLlegada;
+    }
+
+    public void setFechaLlegada(String fechaLlegada) {
+        this.fechaLlegada = fechaLlegada;
     }
 
     public String getFechaPedido() {
@@ -44,20 +74,20 @@ public class OrdenDeCompraDTO {
         this.id = id;
     }
 
+    public float getPrecioIndividual() {
+        return precioIndividual;
+    }
+
+    public void setPrecioIndividual(float precioIndividual) {
+        this.precioIndividual = precioIndividual;
+    }
+
     public String getProveedorArticulo() {
         return proveedorArticulo;
     }
 
     public void setProveedorArticulo(String proveedorArticulo) {
         this.proveedorArticulo = proveedorArticulo;
-    }
-
-    public int getTotalArticulos(int totalArticulos) {
-        return this.totalArticulos;
-    }
-
-    public void setTotalArticulos(int totalArticulos) {
-        this.totalArticulos = totalArticulos;
     }
 
     public float getTotalCompra() {
