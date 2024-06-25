@@ -19,7 +19,7 @@ public class Venta extends Base{
 
 
         @NotNull
-        private int montoTotal;
+        private float montoTotal;
 
         @NotNull
         @Temporal(TemporalType.DATE)
