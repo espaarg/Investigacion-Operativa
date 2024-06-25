@@ -136,5 +136,27 @@ public class DemandaHistoricaServiceImpl extends BaseServiceImpl<DemandaHistoric
         }
     }
 
+    @Override
+    public Integer calcularDemandaHistoricaArticulo(Long idArticulo, String fechaDesde, String fechaHasta) {
+        System.out.println("ID de Artículo recibido en calcularDemandaHistoricaArticulo: " + idArticulo);
+        List<Venta> ventas = ventaRepository.findVentasEntreFechas(fechaDesde, fechaHasta);
+        boolean existe = false;
+        int cantidadTotalVendida = 0;
+        //recorrer ventas y acumular la cantidad vendida del articulo
+        for (Venta venta : ventas) {
+            for (VentaArticulo cantidadArticulo : venta.getVentaArticulos()) {
+                if (cantidadArticulo.getArticulo().getId().equals(idArticulo)) {
+                    cantidadTotalVendida = cantidadTotalVendida + cantidadArticulo.getCantidadArticulo();
+                    existe = true;
+                }
+            }
+        }
+       return cantidadTotalVendida;
+    }
+    @Override
+    public Integer calcularDemandaHistorica(Long idArticulo, String fechaDesde, String fechaHasta) {
+        int cantidadTotal = calcularDemandaHistoricaArticulo(idArticulo, fechaDesde, fechaHasta);
+        return cantidadTotal;
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.example.demo.controladores;
 
 import com.example.demo.dtos.PrediccionDemandaDTO;
+import com.example.demo.dtos.RegresionLinealDTO;
 import com.example.demo.entidades.PrediccionDemanda;
 import com.example.demo.servicios.PrediccionDemandaService;
 import com.example.demo.servicios.PrediccionDemandaServiceImpl;
@@ -50,5 +51,13 @@ public class PrediccionDemandaController extends BaseControllerImpl<PrediccionDe
         }
     }
 
-
+    @PostMapping("/regresionLineal")
+    public ResponseEntity<?> calcularRegresionLineal(@RequestBody RegresionLinealDTO regresionLinealDTO) {
+        try {
+            Integer resultado = prediccionDemandaService.calcularRegresionLineal(regresionLinealDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(resultado);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
 }
