@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 public class PrediccionDemandaDTO {
 
+    private int cantidadDePredicciones;
     private Long idArticulo;
     private int mesAPredecir;
     private int anioAPredecir;

@@ -239,6 +239,7 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             throw new Exception("Error al calcular la predicción de demanda estacional: " + e.getMessage());
         }
     }
+
     public Integer calcularRegresionLineal(RegresionLinealDTO regresionLinealDTO) throws Exception{
         //El método recibe un objeto RegresionLinealDTO que contiene información como el artículo,
         // el mes y año a predecir, y la cantidad de periodos a considerar.
@@ -313,6 +314,41 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
     @Override
     public void predecirDemandas(PrediccionDemandaDTO prediccionDemandaDTO) throws Exception {
         try{
+            Long idArticulo= prediccionDemandaDTO.getIdArticulo();
+            int anioAPredecir= prediccionDemandaDTO.getAnioAPredecir();
+            int mesAPredecir=prediccionDemandaDTO.getMesAPredecir();
+            double prediccionPMP= predecirDemandaPMP(prediccionDemandaDTO);
+            double prediccionPMSE= predecirDemandaPMSuavizadoExponencial(prediccionDemandaDTO);
+            double prediccionEST= predecirDemandaEstacional(prediccionDemandaDTO);
+
+            //calculo del error
+            LocalDate inicioPeriodo = LocalDate.of(anioAPredecir,mesAPredecir, 1);
+            LocalDate finPeriodo = inicioPeriodo.withDayOfMonth(inicioPeriodo.lengthOfMonth());
+            Date fechaDesdeDate = java.sql.Date.valueOf(inicioPeriodo);
+            Date fechaHastaDate = java.sql.Date.valueOf(finPeriodo);
+
+            int demandaReal = demandaHistoricaService.buscarDemandaAnual(idArticulo, fechaDesdeDate, fechaHastaDate);
+
+            //error si no hay demanda para comparar
+            if (demandaReal<=0){
+                throw new Exception("No esta cargada la demanda necesaria para predecir ");
+            }
+
+            double errorPMP= prediccionPMP- demandaReal;
+            double errorPMSE= prediccionPMSE- demandaReal;
+            double errorEST= prediccionEST- demandaReal;
+
+            if(errorPMP<errorPMSE){
+                if(errorPMP<errorEST){
+                    PrediccionDemanda prediccionDemanda = new PrediccionDemanda();
+                    //le seteo errorPMP
+                } else {
+                    //le seteo error EST
+                }
+            } else {
+                //le seteo error PMSE
+            }
+
 
         }catch (Exception e){
             throw new Exception("Error al calcular la predicción de demanda: " + e.getMessage());
