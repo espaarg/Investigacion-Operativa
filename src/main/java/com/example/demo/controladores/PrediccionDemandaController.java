@@ -1,8 +1,6 @@
 package com.example.demo.controladores;
 
-import com.example.demo.dtos.PrediccionEstacionalDTO;
-import com.example.demo.dtos.PrediccionPMPDTO;
-import com.example.demo.dtos.PrediccionPMSEDTO;
+import com.example.demo.dtos.PrediccionDemandaDTO;
 import com.example.demo.entidades.PrediccionDemanda;
 import com.example.demo.servicios.PrediccionDemandaService;
 import com.example.demo.servicios.PrediccionDemandaServiceImpl;
@@ -21,9 +19,9 @@ public class PrediccionDemandaController extends BaseControllerImpl<PrediccionDe
     private PrediccionDemandaService prediccionDemandaService;
 
     @PostMapping("/predecirPMP")
-    public ResponseEntity<?> predecirDemandaPMP(@RequestBody PrediccionPMPDTO prediccionPMPDTO) {
+    public ResponseEntity<?> predecirDemandaPMP(@RequestBody PrediccionDemandaDTO prediccionDemandaDTO) {
         try {
-            double resultado = prediccionDemandaService.predecirDemandaPMP(prediccionPMPDTO);
+            double resultado = prediccionDemandaService.predecirDemandaPMP(prediccionDemandaDTO);
             return ResponseEntity.status(HttpStatus.OK).body(resultado);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
@@ -31,7 +29,7 @@ public class PrediccionDemandaController extends BaseControllerImpl<PrediccionDe
     }
 
     @PostMapping("/predecirPMSE")
-    public ResponseEntity<?> predecirDemandaPMSE(@RequestBody PrediccionPMSEDTO prediccionPMSEDTO) {
+    public ResponseEntity<?> predecirDemandaPMSE(@RequestBody PrediccionDemandaDTO prediccionPMSEDTO) {
         try {
             double resultado = prediccionDemandaService.predecirDemandaPMSuavizadoExponencial(prediccionPMSEDTO);
             return ResponseEntity.status(HttpStatus.OK).body(resultado);
@@ -41,7 +39,7 @@ public class PrediccionDemandaController extends BaseControllerImpl<PrediccionDe
     }
 
   @PostMapping("/predecirEstacional")
-    public ResponseEntity<?> predecirDemandaEstacional(@RequestBody PrediccionEstacionalDTO prediccionEstacionalDTO) {
+    public ResponseEntity<?> predecirDemandaEstacional(@RequestBody PrediccionDemandaDTO prediccionEstacionalDTO) {
         try {
             System.out.println("Recibido: " + prediccionEstacionalDTO);
             double resultado = prediccionDemandaService.predecirDemandaEstacional(prediccionEstacionalDTO);

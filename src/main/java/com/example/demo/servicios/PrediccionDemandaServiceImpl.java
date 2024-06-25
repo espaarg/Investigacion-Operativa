@@ -1,9 +1,6 @@
 package com.example.demo.servicios;
 
-import com.example.demo.dtos.PrediccionEstacionalDTO;
-import com.example.demo.dtos.PrediccionPMPDTO;
-import com.example.demo.dtos.PrediccionPMSEDTO;
-import com.example.demo.entidades.Articulo;
+import com.example.demo.dtos.PrediccionDemandaDTO;
 import com.example.demo.entidades.PrediccionDemanda;
 import com.example.demo.repositorios.BaseRepository;
 import org.hibernate.query.Page;
@@ -27,14 +24,13 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
     @Autowired
     private DemandaHistoricaServiceImpl demandaHistoricaService;
 
-    public double predecirDemandaPMP(PrediccionPMPDTO prediccionPMPDTO) throws Exception {
+    public double predecirDemandaPMP(PrediccionDemandaDTO prediccionDemandaDTO) throws Exception {
         try {
-            Articulo articulo = prediccionPMPDTO.getArticulo();
-            Long idArticulo = articulo.getId();
-            List<Double> coeficientes = prediccionPMPDTO.getCoeficientesPonderacion();
-            int mesAPredecir = prediccionPMPDTO.getMesAPredecir();
-            int anioAPredecir = prediccionPMPDTO.getAnioAPredecir();
-            int cantidadPeriodos= prediccionPMPDTO.getCantidadPeriodosAtras();
+            Long idArticulo = prediccionDemandaDTO.getIdArticulo();
+            List<Double> coeficientes = prediccionDemandaDTO.getCoeficientesPonderacion();
+            int mesAPredecir = prediccionDemandaDTO.getMesAPredecir();
+            int anioAPredecir = prediccionDemandaDTO.getAnioAPredecir();
+            int cantidadPeriodos= prediccionDemandaDTO.getCantidadPeriodosAtrasPMP();
 
             List<Integer> demandasHistoricas = new ArrayList<>();
 
@@ -128,7 +124,7 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             }
 
             suma= suma/3;
-            System.out.println(suma);
+            //System.out.println(suma);
 
             return (suma);
 
@@ -136,10 +132,9 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             throw new Exception(e.getMessage());
         }
     }
-    public double predecirDemandaPMSuavizadoExponencial(PrediccionPMSEDTO prediccionPMSEDTO) throws Exception{
+    public double predecirDemandaPMSuavizadoExponencial(PrediccionDemandaDTO prediccionPMSEDTO) throws Exception{
         try {
-            Articulo articulo = prediccionPMSEDTO.getArticulo();
-            Long idArticulo = articulo.getId();
+            Long idArticulo = prediccionPMSEDTO.getIdArticulo();
             int mesAPredecir = prediccionPMSEDTO.getMesAPredecir();
             int anioAPredecir = prediccionPMSEDTO.getAnioAPredecir();
             double alfa= prediccionPMSEDTO.getAlfa();
@@ -171,8 +166,9 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             //calculo el pronostico
             double prediccion=0.0;
             prediccion= prediccionMesAnterior + alfa * (demanda - prediccionMesAnterior);
-            System.out.println(prediccion);
-            System.out.println(demanda);
+            //System.out.println(prediccion);
+            //System.out.println(prediccionMesAnterior);
+            //System.out.println(demanda);
             return prediccion;
 
         } catch (Exception e) {
@@ -181,13 +177,12 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
     }
 
     @Override
-    public double predecirDemandaEstacional(PrediccionEstacionalDTO prediccionEstacionalDTO) throws Exception {
+    public double predecirDemandaEstacional(PrediccionDemandaDTO prediccionEstacionalDTO) throws Exception {
         try {
-            Articulo articulo = prediccionEstacionalDTO.getArticulo();
-            Long idArticulo = articulo.getId();
-            int cantidadDePeriodos = prediccionEstacionalDTO.getCantidadDePeriodos();
-            int cantidadDeAniosAtras = prediccionEstacionalDTO.getCantidadDeaniosAtras();
-            int cantUnidadesEsperadas = prediccionEstacionalDTO.getCantUnidadesEsperadas();
+            Long idArticulo = prediccionEstacionalDTO.getIdArticulo();
+            int cantidadDePeriodos = prediccionEstacionalDTO.getCantidadDePeriodosEST();
+            int cantidadDeAniosAtras = prediccionEstacionalDTO.getCantidadDeaniosAtrasEST();
+            int cantUnidadesEsperadas = prediccionEstacionalDTO.getCantUnidadesEsperadasEST();
             int mesAPredecir = prediccionEstacionalDTO.getMesAPredecir();
             int anioAPredecir = prediccionEstacionalDTO.getAnioAPredecir();
 
@@ -234,6 +229,7 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             double indiceEstacionalidadMesPredecir = indicesEstacionalidad[mesAPredecir-1];
             double demandaPredicha = ((double) cantUnidadesEsperadas / cantidadDePeriodos) * indiceEstacionalidadMesPredecir;
 
+            System.out.println(demandaPredicha);
             return demandaPredicha;
 
         } catch (Exception e) {
@@ -241,6 +237,14 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
         }
     }
 
+    @Override
+    public void predecirDemandas(PrediccionDemandaDTO prediccionDemandaDTO) throws Exception {
+        try{
+
+        }catch (Exception e){
+            throw new Exception("Error al calcular la predicción de demanda: " + e.getMessage());
+        }
+    }
 
 
     @Override
