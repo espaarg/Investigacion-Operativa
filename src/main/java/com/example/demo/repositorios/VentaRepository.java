@@ -24,4 +24,5 @@ public interface VentaRepository extends BaseRepository<Venta, Long>{
             nativeQuery = true
             )
     List<Venta> findVentasEntreFechas(@Param("fechaDesde") String fechaDesde, @Param("fechaHasta") String fechaHasta);
+
 }

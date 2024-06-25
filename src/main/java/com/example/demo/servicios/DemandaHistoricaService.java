@@ -4,6 +4,7 @@ import com.example.demo.dtos.DemandaHistoricaDTO;
 import com.example.demo.entidades.Articulo;
 import com.example.demo.entidades.DemandaHistorica;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -20,5 +21,7 @@ public interface DemandaHistoricaService extends BaseService<DemandaHistorica, L
     Integer obtenerDemandaAnual(Long idArticulo) throws Exception;
 
     Integer buscarDemandaAnual(Long idArticulo, Date fechaDesde, Date fechaHasta) throws Exception;
+    Integer calcularDemandaHistoricaArticulo(Long idArticulo, String fechaDesde, String fechaHasta);
+    Integer calcularDemandaHistorica(Long idArticulo, String fechaDesde, String fechaHasta);
 
 }
