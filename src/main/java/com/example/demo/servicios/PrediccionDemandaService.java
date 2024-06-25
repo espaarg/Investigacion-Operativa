@@ -17,7 +17,6 @@ public interface PrediccionDemandaService extends BaseService<PrediccionDemanda,
     public double predecirDemandaEstacional(PrediccionDemandaDTO prediccionEstacionalDTO) throws Exception;
 
     public void predecirDemandas(PrediccionDemandaDTO prediccionDemandaDTO) throws Exception;
-    public double predecirDemandaEstacional(PrediccionEstacionalDTO prediccionEstacionalDTO) throws Exception;
     public Integer calcularRegresionLineal(RegresionLinealDTO regresionLinealDTO) throws Exception;
 
 

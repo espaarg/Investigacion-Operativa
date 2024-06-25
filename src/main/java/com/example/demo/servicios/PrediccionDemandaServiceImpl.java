@@ -1,6 +1,7 @@
 package com.example.demo.servicios;
 
 import com.example.demo.dtos.PrediccionDemandaDTO;
+import com.example.demo.dtos.RegresionLinealDTO;
 import com.example.demo.entidades.PrediccionDemanda;
 import com.example.demo.repositorios.BaseRepository;
 import org.hibernate.query.Page;
