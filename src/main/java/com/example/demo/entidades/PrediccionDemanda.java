@@ -22,6 +22,8 @@ public class PrediccionDemanda extends Base{
     @NotNull
     private int porcentajeDeError;
 
+    private double error;
+
     @NotNull
     @Temporal(TemporalType.DATE)
     private Date fechaPedido;
@@ -46,8 +48,11 @@ public class PrediccionDemanda extends Base{
     @Enumerated(EnumType.STRING)
     private FijacionErrorAceptable fijacionErrorAceptable;
 
+    @ManyToOne
+    private Articulo articulo;
+
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @NotNull
     @Builder.Default
     @JoinColumn(name="prediccionDemanda_id")
     private List<DHistoricaDPrediccion> dHistoricaDPrediccionList = new ArrayList<>();

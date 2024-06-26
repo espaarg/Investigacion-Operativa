@@ -3,6 +3,8 @@ package com.example.demo.controladores;
 import com.example.demo.dtos.PrediccionDemandaDTO;
 import com.example.demo.dtos.RegresionLinealDTO;
 import com.example.demo.entidades.PrediccionDemanda;
+import com.example.demo.repositorios.PrediccionDemandaRepository;
+import com.example.demo.servicios.ArticuloService;
 import com.example.demo.servicios.PrediccionDemandaService;
 import com.example.demo.servicios.PrediccionDemandaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +68,16 @@ public class PrediccionDemandaController extends BaseControllerImpl<PrediccionDe
         try {
             Integer resultado = prediccionDemandaService.calcularRegresionLineal(regresionLinealDTO);
             return ResponseEntity.status(HttpStatus.OK).body(resultado);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    @PostMapping("/predecirDemanda")
+    public ResponseEntity<?> iniciarPrediccion(@RequestBody PrediccionDemandaDTO prediccionDemandaDTO) {
+        try {
+            prediccionDemandaService.servicioParaPredecir(prediccionDemandaDTO);
+            return ResponseEntity.status(HttpStatus.OK).body("Predicción de demanda realizada con éxito.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
         }

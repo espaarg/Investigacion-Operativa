@@ -3,9 +3,12 @@ package com.example.demo.servicios;
 import com.example.demo.dtos.GETPrediccionDemandaDTO;
 import com.example.demo.dtos.PrediccionDemandaDTO;
 import com.example.demo.dtos.RegresionLinealDTO;
+import com.example.demo.entidades.Articulo;
 import com.example.demo.entidades.PrediccionDemanda;
+import com.example.demo.repositorios.ArticuloRepository;
 import com.example.demo.repositorios.BaseRepository;
 import com.example.demo.repositorios.PrediccionDemandaRepository;
+import jakarta.transaction.Transactional;
 import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +23,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.demo.enums.MetodoPrediccion.*;
+
 @Service
 
 public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDemanda, Long> implements PrediccionDemandaService{
     @Autowired
     private PrediccionDemandaRepository prediccionDemandaRepository;
+
+    @Autowired
+    private ArticuloRepository articuloRepository;
 
     public PrediccionDemandaServiceImpl(BaseRepository<PrediccionDemanda, Long> baseRepository) {
         super(baseRepository);
@@ -344,8 +352,17 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
 
     }
 
+
+
     @Override
-    public void predecirDemandas(PrediccionDemandaDTO prediccionDemandaDTO) throws Exception {
+    public void servicioParaPredecir(PrediccionDemandaDTO prediccionDemandaDTO) throws Exception {
+    int cantidad= prediccionDemandaDTO.getCantidadDePredicciones();
+    for(int k=0; k<cantidad; k++){
+        predecirDemandas(prediccionDemandaDTO, k);
+        }
+    }
+    @Override
+    public void predecirDemandas(PrediccionDemandaDTO prediccionDemandaDTO, int contador) throws Exception {
         try{
             Long idArticulo= prediccionDemandaDTO.getIdArticulo();
             int anioAPredecir= prediccionDemandaDTO.getAnioAPredecir();
@@ -355,8 +372,19 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             double prediccionEST= predecirDemandaEstacional(prediccionDemandaDTO);
 
             //calculo del error
-            LocalDate inicioPeriodo = LocalDate.of(anioAPredecir,mesAPredecir, 1);
+            if(mesAPredecir <12) {
+                mesAPredecir+= 1;
+                prediccionDemandaDTO.setMesAPredecir(mesAPredecir); //actualizo el mes para la proxima repeticion
+            } else {
+                anioAPredecir+=1;
+                mesAPredecir=1;
+                prediccionDemandaDTO.setMesAPredecir(mesAPredecir); //actualizo
+                prediccionDemandaDTO.setAnioAPredecir(anioAPredecir); //actualizo
+            }
+
+            LocalDate inicioPeriodo = LocalDate.of(anioAPredecir, mesAPredecir, 1);
             LocalDate finPeriodo = inicioPeriodo.withDayOfMonth(inicioPeriodo.lengthOfMonth());
+
             Date fechaDesdeDate = java.sql.Date.valueOf(inicioPeriodo);
             Date fechaHastaDate = java.sql.Date.valueOf(finPeriodo);
 
@@ -373,18 +401,47 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
 
             if(errorPMP<errorPMSE){
                 if(errorPMP<errorEST){
-                    PrediccionDemanda prediccionDemanda = new PrediccionDemanda();
-                    //le seteo errorPMP
+                    prediccionDemandaDTO.setError(errorPMP);
+                    prediccionDemandaDTO.setMetodoPrediccion(Promedio_Ponderado);
+                    crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate);
                 } else {
-                    //le seteo error EST
+                    prediccionDemandaDTO.setError(errorEST);
+                    prediccionDemandaDTO.setMetodoPrediccion(Estacionalidad);
+                    crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate);
                 }
             } else {
-                //le seteo error PMSE
+                prediccionDemandaDTO.setError(errorPMSE);
+                prediccionDemandaDTO.setMetodoPrediccion(Suavizacion_Exponencial);
+                crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate);
             }
 
 
         }catch (Exception e){
             throw new Exception("Error al calcular la predicción de demanda: " + e.getMessage());
+        }
+    }
+
+    @Transactional
+    @Override
+    public void crearPDemanda(PrediccionDemandaDTO prediccionDemandaDTO, Date fechaDesde, Date fechaHasta) throws Exception {
+        try{
+            PrediccionDemanda prediccionDemanda= new PrediccionDemanda();
+
+            double error= prediccionDemandaDTO.getError();
+            Long id = prediccionDemandaDTO.getIdArticulo();
+            Articulo articulo= articuloRepository.traerUnArticuloId(id);
+
+            prediccionDemanda.setError(error);
+            prediccionDemanda.setFechaInicio(fechaDesde);
+            prediccionDemanda.setFechaFin(fechaHasta);
+            prediccionDemanda.setMetodoPrediccion(prediccionDemandaDTO.getMetodoPrediccion());
+            prediccionDemanda.setArticulo(articulo);
+
+            prediccionDemandaRepository.save(prediccionDemanda);
+
+
+        } catch (Exception e) {
+            throw new Exception("Error al crear la prediccion de demanda: " + e.getMessage(), e);
         }
     }
 
