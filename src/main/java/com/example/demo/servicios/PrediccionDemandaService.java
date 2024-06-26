@@ -1,10 +1,12 @@
 package com.example.demo.servicios;
 
+import com.example.demo.dtos.GETPrediccionDemandaDTO;
 import com.example.demo.dtos.PrediccionDemandaDTO;
 import com.example.demo.dtos.RegresionLinealDTO;
 import com.example.demo.entidades.PrediccionDemanda;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface PrediccionDemandaService extends BaseService<PrediccionDemanda, Long>{
 
@@ -20,5 +22,5 @@ public interface PrediccionDemandaService extends BaseService<PrediccionDemanda,
     public Integer calcularRegresionLineal(RegresionLinealDTO regresionLinealDTO) throws Exception;
 
 
-
+    List<GETPrediccionDemandaDTO> traerTodasPredicciones() throws Exception;
 }

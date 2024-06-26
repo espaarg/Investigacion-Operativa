@@ -1,13 +1,16 @@
 package com.example.demo.servicios;
 
+import com.example.demo.dtos.GETPrediccionDemandaDTO;
 import com.example.demo.dtos.PrediccionDemandaDTO;
 import com.example.demo.dtos.RegresionLinealDTO;
 import com.example.demo.entidades.PrediccionDemanda;
 import com.example.demo.repositorios.BaseRepository;
+import com.example.demo.repositorios.PrediccionDemandaRepository;
 import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.awt.print.Pageable;
 import java.time.LocalDate;
@@ -20,6 +23,9 @@ import java.util.List;
 @Service
 
 public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDemanda, Long> implements PrediccionDemandaService{
+    @Autowired
+    private PrediccionDemandaRepository prediccionDemandaRepository;
+
     public PrediccionDemandaServiceImpl(BaseRepository<PrediccionDemanda, Long> baseRepository) {
         super(baseRepository);
     }
@@ -311,6 +317,33 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             throw new Exception("Error al calcular la regresión lineal: " + e.getMessage());
         }
     }
+
+    @Override
+    public List<GETPrediccionDemandaDTO> traerTodasPredicciones() throws Exception {
+        try {
+            List<PrediccionDemanda> predicciones = prediccionDemandaRepository.traerTodasPredicciones();
+            List<GETPrediccionDemandaDTO> prediccionDemandaDTOS = new ArrayList<>();
+            for (PrediccionDemanda p : predicciones){
+                GETPrediccionDemandaDTO dto = new GETPrediccionDemandaDTO();
+                dto.setCantidadPeriodo(p.getCantidadPeriodo().toString());
+                dto.setFechaInicio(p.getFechaInicio().toString());
+                dto.setFechaFin(p.getFechaFin().toString());
+                dto.setMetodoPrediccion(p.getMetodoPrediccion().toString());
+                dto.setMetodoCalculoError(p.getMetodoCalculoError().toString());
+                dto.setFijacionErrorAceptable(p.getFijacionErrorAceptable().toString());
+                if(p.getPorcentajeDeError()!=0){
+                    dto.setPorcentajeDeError(p.getPorcentajeDeError());
+
+                }
+                prediccionDemandaDTOS.add(dto);
+            }
+            return prediccionDemandaDTOS;
+        } catch (Exception e) {
+            throw new Exception("No se pudieron traer");
+        }
+
+    }
+
     @Override
     public void predecirDemandas(PrediccionDemandaDTO prediccionDemandaDTO) throws Exception {
         try{

@@ -19,6 +19,16 @@ public class PrediccionDemandaController extends BaseControllerImpl<PrediccionDe
     @Autowired
     private PrediccionDemandaService prediccionDemandaService;
 
+    @GetMapping("/all")
+    public ResponseEntity<?> traerTodasPredicciones(){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(prediccionDemandaService.traerTodasPredicciones());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }
+
     @PostMapping("/predecirPMP")
     public ResponseEntity<?> predecirDemandaPMP(@RequestBody PrediccionDemandaDTO prediccionDemandaDTO) {
         try {
