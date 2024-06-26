@@ -201,7 +201,7 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
             ProveedorArticulo proveedorArticulo = articulo.getProveedorArticulo();
             // Verificar si el modelo de inventario es Lote Fijo
             if (articulo.getModeloInventario() == ModeloInventario.LOTEFIJO) {
-                double demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
+                double demandaAnual = (double) demandaHistoricaService.obtenerDemandaAnual(idArticulo);
                 double eoq = Math.sqrt((2 * proveedorArticulo.getCostoPedido() * demandaAnual) / articulo.getCostoAlmacenamiento());
                 articulo.setLoteOptimo((int)eoq);
                 articuloRepository.save(articulo);
@@ -221,14 +221,14 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
                     .orElseThrow(() -> new Exception("Artículo no encontrado con id: " + idArticulo));
             ProveedorArticulo proveedorArticulo = articulo.getProveedorArticulo();
             float precio = articulo.getPrecioCompra();
-            int demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
+            int demandaAnual = (int) demandaHistoricaService.obtenerDemandaAnual(idArticulo);
             float costoAlmacenamiento = articulo.getCostoAlmacenamiento();
             int loteOptimo = articulo.getLoteOptimo();
             double costoPedido = proveedorArticulo.getCostoPedido();
             double cgi = 0;
             // Verificar si el modelo de inventario es Lote Fijo
             if (articulo.getModeloInventario() == ModeloInventario.LOTEFIJO) {
-                cgi = (double) ((precio * demandaAnual) + (costoAlmacenamiento * (loteOptimo / 2)) + (costoPedido * (demandaAnual / loteOptimo)));
+                cgi = (double) ((precio * demandaAnual) + (costoAlmacenamiento * ((double) loteOptimo / 2)) + (costoPedido * ((double) demandaAnual / loteOptimo)));
                 articulo.setCgiArticulo(cgi);
                 articuloRepository.save(articulo);
                 return cgi;
@@ -268,8 +268,8 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
             // Verificar si el modelo de inventario es Lote Fijo
             if (articulo.getModeloInventario() == ModeloInventario.LOTEFIJO) {
                 // Obtener la demanda anual desde DemandaHistoricaService
-                int demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
-                double demandaDiaria = demandaAnual/365; //consideramos que trabajamos 365 dias al año
+                int demandaAnual = (int) demandaHistoricaService.obtenerDemandaAnual(idArticulo);
+                double demandaDiaria = (double) demandaAnual /365; //consideramos que trabajamos 365 dias al año
                 int puntoPedido = (int) demandaDiaria * proveedor.getDiasDemora();
                 articulo.setPuntoPedido(puntoPedido);
                 articuloRepository.save(articulo);
@@ -315,7 +315,7 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
         int diasDemora = proveedorArticulo.getDiasDemora();
         int tiempoEntrePedidos = articulo.getTiempoEntrePedidos();
         // Obtener la demanda anual desde DemandaHistoricaService
-        int demandaAnual = demandaHistoricaService.obtenerDemandaAnual(idArticulo);
+        int demandaAnual = (int) demandaHistoricaService.obtenerDemandaAnual(idArticulo);
         int ss = articulo.getStockDeSeguridad();
         int cantMax = 0;
         float demandaDiaria = (float) demandaAnual /365; //consideramos que trabajamos 365 dias al año

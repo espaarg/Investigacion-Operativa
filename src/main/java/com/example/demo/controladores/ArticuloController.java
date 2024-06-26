@@ -178,15 +178,17 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
     @GetMapping("/calculoLoteFijo")
     public ResponseEntity<?> calculoLoteFijo(@RequestParam Long idArticulo, @RequestParam Long idProveedor, @RequestParam Long idMultiplicador) {
         try {
-            double loteOptimo = articuloService.calcularLoteOptimo(idArticulo);
             float costoAlmacenamiento = articuloService.calcularCostoAlmacenamiento(idArticulo, idMultiplicador);
+            double loteOptimo = articuloService.calcularLoteOptimo(idArticulo);
+            double cgi = articuloService.calcularCGI(idArticulo);
             int puntoPedido = articuloService.calcularPuntoPedido(idArticulo, idProveedor);
             int stockDeSeguridad = articuloService.calcularStockDeSeguridad(idArticulo);
-            double cgi = articuloService.calcularCGI(idArticulo);
+
 
             return ResponseEntity.status(HttpStatus.OK).body(String.format(
-                    "{\"loteOptimo\": %f, \"costoAlmacenamiento\": %f, \"puntoPedido\": %d, \"stockDeSeguridad\": %d, \"cgi\": %f}",
-                    (int)loteOptimo, costoAlmacenamiento, puntoPedido, stockDeSeguridad, cgi));
+                    "{\"loteOptimo\": %d, \"costoAlmacenamiento\": %f, \"puntoPedido\": %d, \"stockDeSeguridad\": %d, \"cgi\": %.2f}",
+                    (int) loteOptimo, costoAlmacenamiento, puntoPedido, stockDeSeguridad, cgi));
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
