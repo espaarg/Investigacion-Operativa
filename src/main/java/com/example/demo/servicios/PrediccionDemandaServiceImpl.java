@@ -5,6 +5,8 @@ import com.example.demo.dtos.PrediccionDemandaDTO;
 import com.example.demo.dtos.RegresionLinealDTO;
 import com.example.demo.entidades.Articulo;
 import com.example.demo.entidades.PrediccionDemanda;
+import com.example.demo.enums.MetodoPrediccion;
+import com.example.demo.enums.ModeloInventario;
 import com.example.demo.repositorios.ArticuloRepository;
 import com.example.demo.repositorios.BaseRepository;
 import com.example.demo.repositorios.PrediccionDemandaRepository;
@@ -356,9 +358,9 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
 
     @Override
     public void servicioParaPredecir(PrediccionDemandaDTO prediccionDemandaDTO) throws Exception {
-    int cantidad= prediccionDemandaDTO.getCantidadDePredicciones();
-    for(int k=0; k<cantidad; k++){
-        predecirDemandas(prediccionDemandaDTO, k);
+        int cantidad= prediccionDemandaDTO.getCantidadDePredicciones();
+        for(int k=0; k<cantidad; k++){
+            predecirDemandas(prediccionDemandaDTO, k);
         }
     }
     @Override
@@ -372,6 +374,14 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             double prediccionEST= predecirDemandaEstacional(prediccionDemandaDTO);
 
             //calculo del error
+            LocalDate inicioPeriodo = LocalDate.of(anioAPredecir, mesAPredecir, 1);
+            LocalDate finPeriodo = inicioPeriodo.withDayOfMonth(inicioPeriodo.lengthOfMonth());
+
+            Date fechaDesdeDate = java.sql.Date.valueOf(inicioPeriodo);
+            Date fechaHastaDate = java.sql.Date.valueOf(finPeriodo);
+
+            int demandaReal = demandaHistoricaService.buscarDemandaAnual(idArticulo, fechaDesdeDate, fechaHastaDate);
+
             if(mesAPredecir <12) {
                 mesAPredecir+= 1;
                 prediccionDemandaDTO.setMesAPredecir(mesAPredecir); //actualizo el mes para la proxima repeticion
@@ -381,14 +391,6 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
                 prediccionDemandaDTO.setMesAPredecir(mesAPredecir); //actualizo
                 prediccionDemandaDTO.setAnioAPredecir(anioAPredecir); //actualizo
             }
-
-            LocalDate inicioPeriodo = LocalDate.of(anioAPredecir, mesAPredecir, 1);
-            LocalDate finPeriodo = inicioPeriodo.withDayOfMonth(inicioPeriodo.lengthOfMonth());
-
-            Date fechaDesdeDate = java.sql.Date.valueOf(inicioPeriodo);
-            Date fechaHastaDate = java.sql.Date.valueOf(finPeriodo);
-
-            int demandaReal = demandaHistoricaService.buscarDemandaAnual(idArticulo, fechaDesdeDate, fechaHastaDate);
 
             //error si no hay demanda para comparar
             if (demandaReal<=0){
@@ -437,7 +439,16 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             prediccionDemanda.setError(error);
             prediccionDemanda.setFechaInicio(fechaDesde);
             prediccionDemanda.setFechaFin(fechaHasta);
-            prediccionDemanda.setMetodoPrediccion(prediccionDemandaDTO.getMetodoPrediccion());
+            if(prediccionDemandaDTO.getMetodoPrediccion() == Promedio_Ponderado){
+                prediccionDemanda.setMetodoPrediccion(Promedio_Ponderado);
+            } else {
+                if(prediccionDemandaDTO.getMetodoPrediccion() == Suavizacion_Exponencial){
+                    prediccionDemanda.setMetodoPrediccion(Suavizacion_Exponencial);
+                } else {
+                    prediccionDemanda.setMetodoPrediccion(Estacionalidad);
+                }
+            }
+
             prediccionDemanda.setArticulo(articulo);
             prediccionDemanda.setValorPrediccion(prediccionDemandaDTO.getPrediccion());
 
