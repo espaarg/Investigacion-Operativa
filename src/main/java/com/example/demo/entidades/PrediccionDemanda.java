@@ -51,6 +51,8 @@ public class PrediccionDemanda extends Base{
     @ManyToOne
     private Articulo articulo;
 
+    private double valorPrediccion;
+
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Builder.Default

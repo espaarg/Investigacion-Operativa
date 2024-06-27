@@ -402,15 +402,18 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             if(errorPMP<errorPMSE){
                 if(errorPMP<errorEST){
                     prediccionDemandaDTO.setError(errorPMP);
+                    prediccionDemandaDTO.setPrediccion(prediccionPMP);
                     prediccionDemandaDTO.setMetodoPrediccion(Promedio_Ponderado);
                     crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate);
                 } else {
                     prediccionDemandaDTO.setError(errorEST);
+                    prediccionDemandaDTO.setPrediccion(prediccionEST);
                     prediccionDemandaDTO.setMetodoPrediccion(Estacionalidad);
                     crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate);
                 }
             } else {
                 prediccionDemandaDTO.setError(errorPMSE);
+                prediccionDemandaDTO.setPrediccion(prediccionPMSE);
                 prediccionDemandaDTO.setMetodoPrediccion(Suavizacion_Exponencial);
                 crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate);
             }
@@ -436,6 +439,7 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             prediccionDemanda.setFechaFin(fechaHasta);
             prediccionDemanda.setMetodoPrediccion(prediccionDemandaDTO.getMetodoPrediccion());
             prediccionDemanda.setArticulo(articulo);
+            prediccionDemanda.setValorPrediccion(prediccionDemandaDTO.getPrediccion());
 
             prediccionDemandaRepository.save(prediccionDemanda);
 

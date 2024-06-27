@@ -15,8 +15,9 @@ public class PrediccionDemandaDTO {
     private int mesAPredecir;
     private int anioAPredecir;
 
-    //datos para crear prediccion
+    //datos para crear prediccion que NO SE PIDEN EN EL FRONT
     private double error;
+    private double prediccion;
 
     @Enumerated
     private MetodoPrediccion metodoPrediccion;
