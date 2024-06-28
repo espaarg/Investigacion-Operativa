@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin(origins =  "*")
 @RequestMapping(path = "/Articulo")
@@ -242,39 +244,25 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
         }
     }
 
-    /*
-    @GetMapping("/articulosParaReorden")
-    public ResponseEntity<?> obtenerArticulosParaReorden() {
+    @GetMapping("/articulosAReponer")
+    public ResponseEntity<?> traerArticulosAReponer() {
         try {
-            List<Articulo> articulosParaReorden = servicio.obtenerArticulosParaReorden();
-            return ResponseEntity.status(HttpStatus.OK).body(articulosParaReorden);
+            List<Articulo> articulo = servicio.traerArticulosAReponer();
+            return ResponseEntity.status(HttpStatus.OK).body(articulo);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
 
-     */
 
 
-   /* @GetMapping("/calcularCGI")
-    public ResponseEntity<?> calcularCGI(int stockActual, float precioCompra) {
-        try{
-            return ResponseEntity.status(HttpStatus.OK).body(servicio.calcularCGI(stockActual, precioCompra));
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
-        }
-    }*/
-
-
-    /*
-    public ResponseEntity<?> search(String denominacion) {
+    /*public ResponseEntity<?> search(String denominacion) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(servicio.search(denominacion));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }
-    }*/
+    */
 
 }

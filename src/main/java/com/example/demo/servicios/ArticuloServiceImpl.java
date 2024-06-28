@@ -376,6 +376,15 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
         }
     }
 
+    @Override
+    public List<Articulo> traerArticulosAReponer() throws Exception {
+        try {List<Articulo> articulo = articuloRepository.traerArticulosAReponer();
+            return articulo;
+        } catch (Exception e) {
+            throw new Exception("Error al traer los artículos a reponer: " + e.getMessage());
+        }
+    }
+
     public void darDeBajaArticulo(Articulo articulo) throws Exception {
         if (ordenDeCompraService.buscarOrdenesActivas(articulo)) {
             throw new Exception("No se puede dar de baja el artículo porque existen órdenes activas.");
@@ -389,100 +398,10 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
         }
     }
 
-
     @Override
     public Page findAllPageable(Pageable pageable) throws Exception {
         return null;
     }
-
-
-    /*@Override
-    public double calcularCGI(int stockActual, float precioCompra) throws Exception {
-        if (stockActual <= 0 || precioCompra <= 0) {
-            throw new IllegalArgumentException("Stock actual y precio de compra deben ser mayores que cero");
-        }
-        return precioCompra * stockActual;
-    }
-    @Override
-    public List<Double> calcularCGIDeTodosArticulos() throws Exception {
-        List<Articulo> articulos = articuloRepository.traerTodosArticulos();
-        List<Double> cgis = new ArrayList<>();
-
-        for (Articulo articulo : articulos) {
-            double cgi = calcularCGI(articulo.getStockActual(), articulo.getPrecioCompra());
-            cgis.add(cgi);
-        }
-
-        return cgis;
-    }*/
-
-
-
-    /*public int calcularStockSeguridad(int puntoPedido, int demoraProveedor) {
-        demoraProveedor = ProveedorArticulo.getDiasDemora();
-        int stockDeSeguridad = puntoPedido * demoraProveedor;
-        return this.stockDeSeguridad = stockDeSeguridad;
-    }
-*/
-
-/*    @Override
-    public List<BusquedaArticulosDTO> traerTodosArticulos() throws Exception {
-        try {
-            List<ArticuloInsumo> articuloInsumos = articuloInsumoRepository.controlStockInsuficiente();
-            List<ControlStockDTO> stockDTO = new ArrayList<>();
-
-            for (ArticuloInsumo articulos : articuloInsumos) {
-                // Verifica si el stock actual es menor que el stock mínimo
-                if (articulos.getStockActual() < articulos.getStockMinimo()) {
-                    ControlStockDTO auxDTO = new ControlStockDTO();
-                    auxDTO.setNombre(articulos.getDenominacion());
-                    auxDTO.setDenominacion(articulos.getUnidadMedida().getDenominacion());
-                    auxDTO.setAbreviatura(articulos.getUnidadMedida().getAbreviatura());
-                    auxDTO.setStockMinimo(articulos.getStockMinimo());
-                    auxDTO.setStockActual(articulos.getStockActual());
-                    auxDTO.setDiferenciaStock(articulos.getStockActual() - articulos.getStockMinimo());
-
-                    stockDTO.add(auxDTO);
-                }
-            }
-            return stockDTO;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }*/
-
-
-/*    @Override
-    public List<ControlStockDTO> controlStockBajo() throws Exception {
-        try {
-            List<ArticuloInsumo> articuloInsumos = articuloInsumoRepository.controlStockInsuficiente();
-            List<ControlStockDTO> stockDTO = new ArrayList<>();
-
-            for (ArticuloInsumo articulos : articuloInsumos) {
-                double porcentajeUmbral = 20.0;
-
-                double diferenciaPorcentaje = ((double) articulos.getStockActual() / articulos.getStockMinimo() - 1) * 100;
-
-                // Verifica si la diferencia porcentual es menor o igual al 20%
-                // y si el stock actual no está por debajo del stock mínimo
-                if (diferenciaPorcentaje <= porcentajeUmbral && articulos.getStockActual() >= articulos.getStockMinimo()) {
-                    ControlStockDTO auxDTO = new ControlStockDTO();
-                    auxDTO.setNombre(articulos.getDenominacion());
-                    auxDTO.setDenominacion(articulos.getUnidadMedida().getDenominacion());
-                    auxDTO.setAbreviatura(articulos.getUnidadMedida().getAbreviatura());
-                    auxDTO.setStockMinimo(articulos.getStockMinimo());
-                    auxDTO.setStockActual(articulos.getStockActual());
-                    auxDTO.setDiferenciaStock(articulos.getStockActual() - articulos.getStockMinimo());
-
-                    stockDTO.add(auxDTO);
-                }
-            }
-            return stockDTO;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }*/
-
 
 
     @Override
@@ -515,13 +434,4 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
     }
 
 
-/*    @Override
-    public Page<ArticuloInsumo> search(String denominacion, Number min, Number max, Number stockMenor, Number minStock, Number maxStock, Pageable pageable) throws Exception {
-        try {
-            Page<ArticuloInsumo> articuloInsumos = articuloInsumoRepository.searchNativo(denominacion,min,max,stockMenor,minStock,maxStock, pageable);
-            return articuloInsumos;
-        } catch (Exception e){
-            throw new Exception(e.getMessage());
-        }
-    }*/
 }

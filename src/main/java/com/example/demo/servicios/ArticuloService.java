@@ -47,12 +47,7 @@ public interface ArticuloService extends BaseService<Articulo, Long> {
 
     public void actualizarValores() throws Exception;
 
-/*    List<ControlStockDTO> controlStockInsuficiente() throws Exception;
-
-            List<ControlStockDTO> controlStockBajo() throws Exception;*/
-/*
-    Page<Articulo> search(String denominacion, Number min, Number max, Number stockMenor, Number minStock, Number maxStock, Pageable pageable) throws Exception;
-*/
+    public List<Articulo> traerArticulosAReponer() throws Exception;
 
 
 }

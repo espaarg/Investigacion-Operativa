@@ -36,15 +36,10 @@ public interface ArticuloRepository extends BaseRepository<Articulo, Long>{
 
     @Query(value = "SELECT * FROM articulo a WHERE a.stock_actual < a.stock_de_seguridad", nativeQuery = true)
     List<Articulo> traerArticulosFaltantes(@Param("stockDeSeguridad") int stockDeSeguridad, @Param("stockActual") int stockActual);
-    /*Calculo del CGI
-    @Query(value = "SELECT SUM(a.precioCompra * a.stockActual) / COUNT(a.id) AS cgi " +
-            "FROM articulo a " +
-            "WHERE a.stockActual <= a.stockDeSeguridad", nativeQuery = true)
-    Double calcularCGI();
 
-    @Query(value = "SELECT SUM(a.precioCompra * a.stockActual) AS cgi_total FROM articulo a", nativeQuery = true)
-    Double calcularCGIDeTodosArticulos();*/
-
-
+    @Query(value= "SELECT * FROM articulo a WHERE a.stock_actual <= a.punto_pedido AND a.id NOT IN " +
+            "(SELECT o.articulo_id FROM orden_de_compra o " +
+            "WHERE o.articulo_id IS NOT NULL)", nativeQuery = true)
+    List<Articulo> traerArticulosAReponer();
 }
 
