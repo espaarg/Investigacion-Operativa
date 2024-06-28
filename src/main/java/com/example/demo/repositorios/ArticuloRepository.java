@@ -39,7 +39,7 @@ public interface ArticuloRepository extends BaseRepository<Articulo, Long>{
 
     @Query(value= "SELECT * FROM articulo a WHERE a.stock_actual <= a.punto_pedido AND a.id NOT IN " +
             "(SELECT o.articulo_id FROM orden_de_compra o " +
-            "WHERE o.articulo_id IS NOT NULL)", nativeQuery = true)
+            "WHERE o.articulo_id IS NOT NULL AND o.estado_orden_de_compra = \"Pedida\")", nativeQuery = true)
     List<Articulo> traerArticulosAReponer();
 }
 
