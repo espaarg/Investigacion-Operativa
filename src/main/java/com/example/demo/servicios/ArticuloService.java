@@ -19,7 +19,7 @@ public interface ArticuloService extends BaseService<Articulo, Long> {
     List<Articulo> traerArticuloBajoStock(int stockDeSeguridad, int stockActual) throws Exception;
 
     @Transactional(readOnly = true)
-    List<Articulo> traerArticulosFaltantes(int stockDeSeguridad, int stockActual) throws Exception;
+    List<ArticuloDTO> traerArticulosFaltantes() throws Exception;
 
     void crearArticulo(String nombre, long precioCompra, int stockDeSeguridad, int stockActual, int loteOptimo, int cantMax, String modeloInventario, String proveedorArticulo, Float cgiArticulo, int cantAPedir, int puntoPedido, int tiempoEntrePedidos) throws Exception;
 

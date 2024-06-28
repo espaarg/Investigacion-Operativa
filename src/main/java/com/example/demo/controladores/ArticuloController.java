@@ -78,9 +78,9 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
         }
     }
     @GetMapping("/articulosFaltantes")
-    public ResponseEntity<?> identificarArticulosFaltantes(int stockDeSeguridad, int stockActual) {
+    public ResponseEntity<?> identificarArticulosFaltantes() {
         try{
-            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerArticulosFaltantes(stockDeSeguridad, stockActual));
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.traerArticulosFaltantes());
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
