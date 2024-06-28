@@ -25,9 +25,6 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class DemandaHistorica extends Base{
 
-    @Enumerated(EnumType.STRING)
-    private CantidadPeriodo periodo;
-
     @NotNull
     private int cantidadVendida;
 

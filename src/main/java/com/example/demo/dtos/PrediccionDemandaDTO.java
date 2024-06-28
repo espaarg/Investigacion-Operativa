@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 public class PrediccionDemandaDTO {
 
-    private CantidadPeriodo cantidadDePredicciones;
+    private String cantidadDePredicciones;
     private Long idArticulo;
     private int mesAPredecir;
     private int anioAPredecir;
