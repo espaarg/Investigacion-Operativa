@@ -343,11 +343,10 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
                 dto.setMetodoPrediccion(p.getMetodoPrediccion().toString());
                 dto.setArticulo(p.getArticulo().getNombre());
                 dto.setValorPrediccion(p.getValorPrediccion());
+                dto.setError(p.getError());
                 dto.setId(p.getId());
-                if(p.getPorcentajeDeError()!=0){
-                    dto.setPorcentajeDeError(p.getPorcentajeDeError());
+                dto.setPorcentajeDeError(p.getPorcentajeDeError());
 
-                }
                 prediccionDemandaDTOS.add(dto);
             }
             return prediccionDemandaDTOS;

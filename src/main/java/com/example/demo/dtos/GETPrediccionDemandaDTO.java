@@ -6,39 +6,41 @@ public class GETPrediccionDemandaDTO {
 
     int porcentajeDeError;
 
-    String fechaPedido;
-
     String fechaInicio;
+
+    double error;
 
     String fechaFin;
 
     String cantidadPeriodo;
 
-    String metodoCalculoError;
-
     String metodoPrediccion;
-
-    String fijacionErrorAceptable;
 
     String articulo;
 
     double valorPrediccion;
 
-    public GETPrediccionDemandaDTO(String articulo, String cantidadPeriodo, String fechaFin, String fechaInicio, String fechaPedido, String fijacionErrorAceptable, Long id, String metodoCalculoError, String metodoPrediccion, int porcentajeDeError, double valorPrediccion) {
+    public GETPrediccionDemandaDTO(String articulo, String cantidadPeriodo,double error, String fechaFin, String fechaInicio, String fechaPedido, String fijacionErrorAceptable, Long id, String metodoCalculoError, String metodoPrediccion, int porcentajeDeError, double valorPrediccion) {
         this.articulo = articulo;
         this.cantidadPeriodo = cantidadPeriodo;
+        this.error = error;
         this.fechaFin = fechaFin;
         this.fechaInicio = fechaInicio;
-        this.fechaPedido = fechaPedido;
-        this.fijacionErrorAceptable = fijacionErrorAceptable;
         this.id = id;
-        this.metodoCalculoError = metodoCalculoError;
         this.metodoPrediccion = metodoPrediccion;
         this.porcentajeDeError = porcentajeDeError;
         this.valorPrediccion = valorPrediccion;
     }
 
     public GETPrediccionDemandaDTO() {
+    }
+
+    public double getError() {
+        return error;
+    }
+
+    public void setError(double error) {
+        this.error = error;
     }
 
     public double getValorPrediccion() {
@@ -89,29 +91,7 @@ public class GETPrediccionDemandaDTO {
         this.fechaInicio = fechaInicio;
     }
 
-    public String getFechaPedido() {
-        return fechaPedido;
-    }
 
-    public void setFechaPedido(String fechaPedido) {
-        this.fechaPedido = fechaPedido;
-    }
-
-    public String getFijacionErrorAceptable() {
-        return fijacionErrorAceptable;
-    }
-
-    public void setFijacionErrorAceptable(String fijacionErrorAceptable) {
-        this.fijacionErrorAceptable = fijacionErrorAceptable;
-    }
-
-    public String getMetodoCalculoError() {
-        return metodoCalculoError;
-    }
-
-    public void setMetodoCalculoError(String metodoCalculoError) {
-        this.metodoCalculoError = metodoCalculoError;
-    }
 
     public String getMetodoPrediccion() {
         return metodoPrediccion;
