@@ -24,6 +24,7 @@ public interface PrediccionDemandaService extends BaseService<PrediccionDemanda,
 
     @Transactional
     public void crearPDemanda(PrediccionDemandaDTO prediccionDemandaDTO, Date fechaDesde, Date fechaHasta) throws Exception;
+
     public Integer calcularRegresionLineal(RegresionLinealDTO regresionLinealDTO) throws Exception;
 
     public void servicioParaPredecir(PrediccionDemandaDTO prediccionDemandaDTO) throws Exception;

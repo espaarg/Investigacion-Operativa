@@ -20,7 +20,12 @@ public class GETPrediccionDemandaDTO {
 
     String fijacionErrorAceptable;
 
-    public GETPrediccionDemandaDTO(String cantidadPeriodo, String fechaFin, String fechaInicio, String fechaPedido, String fijacionErrorAceptable, Long id, String metodoCalculoError, String metodoPrediccion, int porcentajeDeError) {
+    String articulo;
+
+    double valorPrediccion;
+
+    public GETPrediccionDemandaDTO(String articulo, String cantidadPeriodo, String fechaFin, String fechaInicio, String fechaPedido, String fijacionErrorAceptable, Long id, String metodoCalculoError, String metodoPrediccion, int porcentajeDeError, double valorPrediccion) {
+        this.articulo = articulo;
         this.cantidadPeriodo = cantidadPeriodo;
         this.fechaFin = fechaFin;
         this.fechaInicio = fechaInicio;
@@ -30,9 +35,26 @@ public class GETPrediccionDemandaDTO {
         this.metodoCalculoError = metodoCalculoError;
         this.metodoPrediccion = metodoPrediccion;
         this.porcentajeDeError = porcentajeDeError;
+        this.valorPrediccion = valorPrediccion;
     }
 
     public GETPrediccionDemandaDTO() {
+    }
+
+    public double getValorPrediccion() {
+        return valorPrediccion;
+    }
+
+    public void setValorPrediccion(double valorPrediccion) {
+        this.valorPrediccion = valorPrediccion;
+    }
+
+    public String getArticulo() {
+        return articulo;
+    }
+
+    public void setArticulo(String articulo) {
+        this.articulo = articulo;
     }
 
     public Long getId() {
