@@ -461,12 +461,15 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             double error= prediccionDemandaDTO.getError();
             Long id = prediccionDemandaDTO.getIdArticulo();
             Articulo articulo= articuloRepository.traerUnArticuloId(id);
+            String cantidadString= prediccionDemandaDTO.getCantidadDePredicciones();
+            CantidadPeriodo cantidad = CantidadPeriodo.valueOf(cantidadString.toUpperCase());
 
             prediccionDemanda.setError(error);
             prediccionDemanda.setPorcentajeDeError((int)prediccionDemandaDTO.getPorcentajeDeError());
             prediccionDemanda.setFechaInicio(fechaDesde);
             prediccionDemanda.setFechaFin(fechaHasta);
             prediccionDemanda.setMetodoPrediccion(metodoPrediccion);
+            prediccionDemanda.setCantidadPeriodo(cantidad);
 
             prediccionDemanda.setArticulo(articulo);
             prediccionDemanda.setValorPrediccion(prediccionDemandaDTO.getPrediccion());
