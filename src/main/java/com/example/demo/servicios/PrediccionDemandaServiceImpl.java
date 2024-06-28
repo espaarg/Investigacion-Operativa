@@ -362,7 +362,8 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
     @Override
     public void servicioParaPredecir(PrediccionDemandaDTO prediccionDemandaDTO) throws Exception {
         try{
-            CantidadPeriodo cantidad= prediccionDemandaDTO.getCantidadDePredicciones();
+            String cantidadString= prediccionDemandaDTO.getCantidadDePredicciones();
+            CantidadPeriodo cantidad = CantidadPeriodo.valueOf(cantidadString.toUpperCase());
             int contador;
             if (cantidad == CantidadPeriodo.MES){
                 contador=1;
@@ -378,7 +379,7 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             }
         } catch (Exception e){
         throw new Exception("Error al calcular la predicción de demanda: " + e.getMessage());
-    }
+        }
     }
 
     @Override
@@ -429,21 +430,21 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
                     prediccionDemandaDTO.setError(errorPMP);
                     prediccionDemandaDTO.setPorcentajeDeError(porcentajeDeErrorPMP);
                     prediccionDemandaDTO.setPrediccion(prediccionPMP);
-                    prediccionDemandaDTO.setMetodoPrediccion(Promedio_Ponderado);
-                    crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate);
+                    MetodoPrediccion metodoPrediccion= Promedio_Ponderado;
+                    crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate, metodoPrediccion);
                 } else {
                     prediccionDemandaDTO.setError(errorEST);
                     prediccionDemandaDTO.setPorcentajeDeError(porcentajeDeErrorEST);
                     prediccionDemandaDTO.setPrediccion(prediccionEST);
-                    prediccionDemandaDTO.setMetodoPrediccion(Estacionalidad);
-                    crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate);
+                    MetodoPrediccion metodoPrediccion= Estacionalidad;
+                    crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate, metodoPrediccion);
                 }
             } else {
                 prediccionDemandaDTO.setError(errorPMSE);
                 prediccionDemandaDTO.setPorcentajeDeError(porcentajeDeErrorPMSE);
                 prediccionDemandaDTO.setPrediccion(prediccionPMSE);
-                prediccionDemandaDTO.setMetodoPrediccion(Suavizacion_Exponencial);
-                crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate);
+                MetodoPrediccion metodoPrediccion= Suavizacion_Exponencial;
+                crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate, metodoPrediccion);
             }
 
 
@@ -454,7 +455,7 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
 
     @Transactional
     @Override
-    public void crearPDemanda(PrediccionDemandaDTO prediccionDemandaDTO, Date fechaDesde, Date fechaHasta) throws Exception {
+    public void crearPDemanda(PrediccionDemandaDTO prediccionDemandaDTO, Date fechaDesde, Date fechaHasta, MetodoPrediccion metodoPrediccion) throws Exception {
         try{
             PrediccionDemanda prediccionDemanda= new PrediccionDemanda();
 
@@ -466,16 +467,7 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             prediccionDemanda.setPorcentajeDeError((int)prediccionDemandaDTO.getPorcentajeDeError());
             prediccionDemanda.setFechaInicio(fechaDesde);
             prediccionDemanda.setFechaFin(fechaHasta);
-
-            if(prediccionDemandaDTO.getMetodoPrediccion() == Promedio_Ponderado){
-                prediccionDemanda.setMetodoPrediccion(Promedio_Ponderado);
-            } else {
-                if(prediccionDemandaDTO.getMetodoPrediccion() == Suavizacion_Exponencial){
-                    prediccionDemanda.setMetodoPrediccion(Suavizacion_Exponencial);
-                } else {
-                    prediccionDemanda.setMetodoPrediccion(Estacionalidad);
-                }
-            }
+            prediccionDemanda.setMetodoPrediccion(metodoPrediccion);
 
             prediccionDemanda.setArticulo(articulo);
             prediccionDemanda.setValorPrediccion(prediccionDemandaDTO.getPrediccion());

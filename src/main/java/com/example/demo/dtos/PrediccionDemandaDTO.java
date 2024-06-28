@@ -21,9 +21,6 @@ public class PrediccionDemandaDTO {
     private double porcentajeDeError;
     private double prediccion;
 
-    @Enumerated
-    private MetodoPrediccion metodoPrediccion;
-
     //PMP
     private List<Double> coeficientesPonderacion;
     private int cantidadPeriodosAtrasPMP;
