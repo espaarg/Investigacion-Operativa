@@ -47,7 +47,7 @@ public interface ArticuloService extends BaseService<Articulo, Long> {
 
     public void actualizarValores() throws Exception;
 
-    public List<Articulo> traerArticulosAReponer() throws Exception;
+    public List<ArticuloDTO> traerArticulosAReponer() throws Exception;
 
 
 }

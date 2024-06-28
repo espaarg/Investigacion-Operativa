@@ -60,5 +60,4 @@ public class Articulo extends Base {
     @ManyToOne(fetch = FetchType.LAZY)
     private ProveedorArticulo proveedorArticulo;
 
-
 }

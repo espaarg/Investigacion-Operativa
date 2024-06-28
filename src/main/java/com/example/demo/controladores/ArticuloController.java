@@ -1,5 +1,6 @@
 package com.example.demo.controladores;
 
+import com.example.demo.dtos.ArticuloDTO;
 import com.example.demo.entidades.Articulo;
 import com.example.demo.servicios.ArticuloService;
 import com.example.demo.servicios.ArticuloServiceImpl;
@@ -247,7 +248,7 @@ public class ArticuloController extends BaseControllerImpl<Articulo, ArticuloSer
     @GetMapping("/articulosAReponer")
     public ResponseEntity<?> traerArticulosAReponer() {
         try {
-            List<Articulo> articulo = servicio.traerArticulosAReponer();
+            List<ArticuloDTO> articulo = servicio.traerArticulosAReponer();
             return ResponseEntity.status(HttpStatus.OK).body(articulo);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");

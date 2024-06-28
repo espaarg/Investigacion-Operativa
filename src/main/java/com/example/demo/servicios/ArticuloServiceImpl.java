@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.awt.print.Pageable;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -377,9 +374,29 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
     }
 
     @Override
-    public List<Articulo> traerArticulosAReponer() throws Exception {
+    public List<ArticuloDTO> traerArticulosAReponer() throws Exception {
         try {List<Articulo> articulo = articuloRepository.traerArticulosAReponer();
-            return articulo;
+            List<ArticuloDTO> articuloDTOS = new ArrayList<>();
+            for (Articulo art : articulo){
+                ArticuloDTO dto = new ArticuloDTO();
+                dto.setId(art.getId());
+                dto.setCgiArticulo((float) art.getCgiArticulo());
+                dto.setProveedorArticulo(art.getProveedorArticulo().getNombreProveedor());
+                dto.setLoteOptimo(art.getLoteOptimo());
+                dto.setCostoAlmacenamiento(art.getCostoAlmacenamiento());
+                dto.setCantAPedir(art.getCantAPedir());
+                dto.setCantMax(art.getCantMax());
+                dto.setModeloInventario(art.getModeloInventario().toString());
+                dto.setNombre(art.getNombre());
+                dto.setPrecioCompra(art.getPrecioCompra());
+                dto.setPuntoPedido(art.getPuntoPedido());
+                dto.setStockActual(art.getStockActual());
+                dto.setStockDeSeguridad(art.getStockDeSeguridad());
+                dto.setTiempoEntrePedidos(art.getTiempoEntrePedidos());
+                dto.setFechaAlta(art.getFechaAlta().toString());
+                articuloDTOS.add(dto);
+            }
+            return articuloDTOS;
         } catch (Exception e) {
             throw new Exception("Error al traer los artículos a reponer: " + e.getMessage());
         }
