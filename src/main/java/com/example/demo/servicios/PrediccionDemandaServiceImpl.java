@@ -339,8 +339,6 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
                 dto.setFechaInicio(p.getFechaInicio().toString());
                 dto.setFechaFin(p.getFechaFin().toString());
                 dto.setMetodoPrediccion(p.getMetodoPrediccion().toString());
-                dto.setMetodoCalculoError(p.getMetodoCalculoError().toString());
-                dto.setFijacionErrorAceptable(p.getFijacionErrorAceptable().toString());
                 dto.setArticulo(p.getArticulo().getNombre());
                 dto.setValorPrediccion(p.getValorPrediccion());
                 dto.setId(p.getId());
@@ -442,6 +440,7 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             prediccionDemanda.setError(error);
             prediccionDemanda.setFechaInicio(fechaDesde);
             prediccionDemanda.setFechaFin(fechaHasta);
+
             if(prediccionDemandaDTO.getMetodoPrediccion() == Promedio_Ponderado){
                 prediccionDemanda.setMetodoPrediccion(Promedio_Ponderado);
             } else {

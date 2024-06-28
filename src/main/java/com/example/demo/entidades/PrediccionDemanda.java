@@ -19,14 +19,9 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PrediccionDemanda extends Base{
 
-    @NotNull
     private int porcentajeDeError;
 
     private double error;
-
-    @NotNull
-    @Temporal(TemporalType.DATE)
-    private Date fechaPedido;
 
     @NotNull
     @Temporal(TemporalType.DATE)
@@ -36,36 +31,14 @@ public class PrediccionDemanda extends Base{
     @Temporal(TemporalType.DATE)
     private Date fechaFin;
 
-    @Enumerated(EnumType.STRING)
     private CantidadPeriodo cantidadPeriodo;
 
     @Enumerated(EnumType.STRING)
-    private MetodoCalculoError metodoCalculoError;
-
-    @Enumerated(EnumType.STRING)
     private MetodoPrediccion metodoPrediccion;
-
-    @Enumerated(EnumType.STRING)
-    private FijacionErrorAceptable fijacionErrorAceptable;
 
     @ManyToOne
     private Articulo articulo;
 
     private double valorPrediccion;
-
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @Builder.Default
-    @JoinColumn(name="prediccionDemanda_id")
-    private List<DHistoricaDPrediccion> dHistoricaDPrediccionList = new ArrayList<>();
-
-    public void AgregarDHistoricaDprediccion(DHistoricaDPrediccion dHistoricaDPrediccion){
-
-        dHistoricaDPrediccionList.add(dHistoricaDPrediccion);
-    }
-
-
-
-
 
 }

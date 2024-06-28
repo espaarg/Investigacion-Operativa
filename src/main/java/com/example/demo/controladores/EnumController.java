@@ -29,19 +29,6 @@ public class EnumController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/FijError")
-    public List<String> getFijErrorValues() {
-        return Arrays.stream(FijacionErrorAceptable.values())
-                .map(Enum::name)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/MetCalc")
-    public List<String> getMetCalcValues() {
-        return Arrays.stream(MetodoCalculoError.values())
-                .map(Enum::name)
-                .collect(Collectors.toList());
-    }
 
     @GetMapping("/MetPred")
     public List<String> getMetPredValues() {

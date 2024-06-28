@@ -39,16 +39,9 @@ public class DemandaHistorica extends Base{
     @Temporal(TemporalType.DATE)
     private Date fechaFin;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Articulo articulo;
 
-    /*
-    @NotNull
-    @Temporal(TemporalType.DATE)
-    private Date fechaAlta;
-
-     */
     @Temporal(TemporalType.DATE)
     private Date fechaBaja;
 
@@ -56,22 +49,6 @@ public class DemandaHistorica extends Base{
 
         return cantidadVendida;
     }
-
-   /* @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Venta venta;
-
-
-    @OneToMany(fetch= FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<DHistoricaVenta> dHistoricaVentaList = new ArrayList<>();
-
-    public void AgregarDHistoricaVenta (DHistoricaVenta dHistoricaVenta){
-        dHistoricaVentaList.add(dHistoricaVenta);
-    }
-    */
-
-
 
 
 }
