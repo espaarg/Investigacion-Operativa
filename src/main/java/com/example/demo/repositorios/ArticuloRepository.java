@@ -35,7 +35,7 @@ public interface ArticuloRepository extends BaseRepository<Articulo, Long>{
     List<Articulo> traerArticuloBajoStock(@Param("stockDeSeguridad") int stockDeSeguridad, @Param("stockActual") int stockActual);
 
     @Query(value = "SELECT * FROM articulo a WHERE a.stock_actual < a.stock_de_seguridad", nativeQuery = true)
-    List<Articulo> traerArticulosFaltantes(@Param("stockDeSeguridad") int stockDeSeguridad, @Param("stockActual") int stockActual);
+    List<Articulo> traerArticulosFaltantes();
 
     @Query(value= "SELECT * FROM articulo a WHERE a.stock_actual <= a.punto_pedido AND a.id NOT IN " +
             "(SELECT o.articulo_id FROM orden_de_compra o " +

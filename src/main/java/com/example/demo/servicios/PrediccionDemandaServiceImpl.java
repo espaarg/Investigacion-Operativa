@@ -5,6 +5,7 @@ import com.example.demo.dtos.PrediccionDemandaDTO;
 import com.example.demo.dtos.RegresionLinealDTO;
 import com.example.demo.entidades.Articulo;
 import com.example.demo.entidades.PrediccionDemanda;
+import com.example.demo.enums.CantidadPeriodo;
 import com.example.demo.enums.MetodoPrediccion;
 import com.example.demo.enums.ModeloInventario;
 import com.example.demo.repositorios.ArticuloRepository;
@@ -26,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.demo.enums.MetodoPrediccion.*;
+import static java.lang.Math.abs;
 
 @Service
 
@@ -339,8 +341,6 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
                 dto.setFechaInicio(p.getFechaInicio().toString());
                 dto.setFechaFin(p.getFechaFin().toString());
                 dto.setMetodoPrediccion(p.getMetodoPrediccion().toString());
-                dto.setMetodoCalculoError(p.getMetodoCalculoError().toString());
-                dto.setFijacionErrorAceptable(p.getFijacionErrorAceptable().toString());
                 dto.setArticulo(p.getArticulo().getNombre());
                 dto.setValorPrediccion(p.getValorPrediccion());
                 dto.setId(p.getId());
@@ -361,11 +361,26 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
 
     @Override
     public void servicioParaPredecir(PrediccionDemandaDTO prediccionDemandaDTO) throws Exception {
-        int cantidad= prediccionDemandaDTO.getCantidadDePredicciones();
-        for(int k=0; k<cantidad; k++){
-            predecirDemandas(prediccionDemandaDTO, k);
-        }
+        try{
+            CantidadPeriodo cantidad= prediccionDemandaDTO.getCantidadDePredicciones();
+            int contador;
+            if (cantidad == CantidadPeriodo.MES){
+                contador=1;
+            } else {
+                if(cantidad == CantidadPeriodo.BIMESTRE){
+                    contador=2;
+                } else {
+                    contador=3;
+                }
+            }
+            for(int k=0; k<contador; k++){
+                predecirDemandas(prediccionDemandaDTO, k);
+            }
+        } catch (Exception e){
+        throw new Exception("Error al calcular la predicción de demanda: " + e.getMessage());
     }
+    }
+
     @Override
     public void predecirDemandas(PrediccionDemandaDTO prediccionDemandaDTO, int contador) throws Exception {
         try{
@@ -404,20 +419,28 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             double errorPMSE= prediccionPMSE- demandaReal;
             double errorEST= prediccionEST- demandaReal;
 
+            //porcentaje de error
+            double porcentajeDeErrorPMP = Math.abs(errorPMP / demandaReal) * 100;
+            double porcentajeDeErrorPMSE = Math.abs(errorPMSE / demandaReal) * 100;
+            double porcentajeDeErrorEST = Math.abs(errorEST / demandaReal) * 100;
+
             if(errorPMP<errorPMSE){
                 if(errorPMP<errorEST){
                     prediccionDemandaDTO.setError(errorPMP);
+                    prediccionDemandaDTO.setPorcentajeDeError(porcentajeDeErrorPMP);
                     prediccionDemandaDTO.setPrediccion(prediccionPMP);
                     prediccionDemandaDTO.setMetodoPrediccion(Promedio_Ponderado);
                     crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate);
                 } else {
                     prediccionDemandaDTO.setError(errorEST);
+                    prediccionDemandaDTO.setPorcentajeDeError(porcentajeDeErrorEST);
                     prediccionDemandaDTO.setPrediccion(prediccionEST);
                     prediccionDemandaDTO.setMetodoPrediccion(Estacionalidad);
                     crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate);
                 }
             } else {
                 prediccionDemandaDTO.setError(errorPMSE);
+                prediccionDemandaDTO.setPorcentajeDeError(porcentajeDeErrorPMSE);
                 prediccionDemandaDTO.setPrediccion(prediccionPMSE);
                 prediccionDemandaDTO.setMetodoPrediccion(Suavizacion_Exponencial);
                 crearPDemanda(prediccionDemandaDTO, fechaDesdeDate, fechaHastaDate);
@@ -440,8 +463,10 @@ public class PrediccionDemandaServiceImpl extends BaseServiceImpl<PrediccionDema
             Articulo articulo= articuloRepository.traerUnArticuloId(id);
 
             prediccionDemanda.setError(error);
+            prediccionDemanda.setPorcentajeDeError((int)prediccionDemandaDTO.getPorcentajeDeError());
             prediccionDemanda.setFechaInicio(fechaDesde);
             prediccionDemanda.setFechaFin(fechaHasta);
+
             if(prediccionDemandaDTO.getMetodoPrediccion() == Promedio_Ponderado){
                 prediccionDemanda.setMetodoPrediccion(Promedio_Ponderado);
             } else {

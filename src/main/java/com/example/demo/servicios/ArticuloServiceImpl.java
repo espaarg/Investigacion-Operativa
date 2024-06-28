@@ -365,9 +365,29 @@ public class ArticuloServiceImpl extends BaseServiceImpl<Articulo, Long> impleme
     }
     @Override
     @Transactional(readOnly = true)
-    public List<Articulo> traerArticulosFaltantes(int stockDeSeguridad, int stockActual) throws Exception {
-        try {List<Articulo> articulo = articuloRepository.traerArticulosFaltantes(stockDeSeguridad, stockActual);
-            return articulo;
+    public List<ArticuloDTO> traerArticulosFaltantes() throws Exception {
+        try {List<Articulo> articulo = articuloRepository.traerArticulosFaltantes();
+            List<ArticuloDTO> articuloDTOS = new ArrayList<>();
+            for (Articulo art : articulo){
+                ArticuloDTO dto = new ArticuloDTO();
+                dto.setId(art.getId());
+                dto.setCgiArticulo((float) art.getCgiArticulo());
+                dto.setProveedorArticulo(art.getProveedorArticulo().getNombreProveedor());
+                dto.setLoteOptimo(art.getLoteOptimo());
+                dto.setCostoAlmacenamiento(art.getCostoAlmacenamiento());
+                dto.setCantAPedir(art.getCantAPedir());
+                dto.setCantMax(art.getCantMax());
+                dto.setModeloInventario(art.getModeloInventario().toString());
+                dto.setNombre(art.getNombre());
+                dto.setPrecioCompra(art.getPrecioCompra());
+                dto.setPuntoPedido(art.getPuntoPedido());
+                dto.setStockActual(art.getStockActual());
+                dto.setStockDeSeguridad(art.getStockDeSeguridad());
+                dto.setTiempoEntrePedidos(art.getTiempoEntrePedidos());
+                dto.setFechaAlta(art.getFechaAlta().toString());
+                articuloDTOS.add(dto);
+            }
+            return articuloDTOS;
         } catch (Exception e) {
             throw new Exception("Error al traer los artículos faltantes: " + e.getMessage());
         }
